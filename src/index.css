@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+
+.font-display-xl{
+    font-family: Lexend, sans-serif;
+}
