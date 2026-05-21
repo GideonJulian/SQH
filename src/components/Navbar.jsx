@@ -15,7 +15,7 @@ export default function Navbar() {
           }}
           className="md:hidden"
         >
-          <Menu />
+          {/* <Menu /> */}
         </motion.button>
 
         <div className="text-2xl font-black tracking-tight uppercase">
@@ -27,7 +27,7 @@ export default function Navbar() {
             scale: 0.9,
           }}
         >
-          <Bolt />
+          {/* <Bolt /> */}
         </motion.button>
       </nav>
     </header>
