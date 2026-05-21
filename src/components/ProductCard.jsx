@@ -3,6 +3,11 @@
 import { motion } from "framer-motion";
 
 export default function ProductCard({ product }) {
+  const price =
+    typeof product.price === "number"
+      ? `$${product.price.toFixed(2)}`
+      : product.price;
+
   return (
     <motion.div
       whileHover={{
@@ -42,7 +47,7 @@ export default function ProductCard({ product }) {
       </h3>
 
       <p className="text-lg mt-1 font-semibold">
-        {product.price}
+        {price}
       </p>
     </motion.div>
   );

@@ -6,7 +6,6 @@ import { products } from "../data/products";
 export default function MobileFeaturedCarousel() {
   return (
     <section className="md:hidden mt-16">
-
       <div className="px-6 mb-6 flex justify-between items-end">
         <h2 className="text-2xl font-black uppercase tracking-tight">
           Featured Drops
@@ -18,7 +17,6 @@ export default function MobileFeaturedCarousel() {
       </div>
 
       <div className="flex overflow-x-auto no-scrollbar gap-4 px-6 snap-x snap-mandatory">
-
         {products.slice(0, 3).map((product, index) => (
           <motion.div
             key={product.id}
@@ -37,7 +35,6 @@ export default function MobileFeaturedCarousel() {
             className="flex-none w-[85%] snap-start"
           >
             <div className="aspect-[4/5] overflow-hidden mb-4 bg-zinc-100 relative">
-
               <motion.img
                 whileHover={{
                   scale: 1.05,
@@ -61,9 +58,7 @@ export default function MobileFeaturedCarousel() {
               {product.title}
             </p>
 
-            <p className="mt-1 text-lg font-semibold">
-              {product.price}
-            </p>
+            <p className="mt-1 text-lg font-semibold">{product.price}</p>
           </motion.div>
         ))}
       </div>

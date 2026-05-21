@@ -9,11 +9,12 @@ export default function Home() {
   const isLoading = useAppLoading();
   return (
     <>
-      <GlobalLoader isLoading={isLoading} />
+      {/* <GlobalLoader isLoading={isLoading} /> */}
       <div
-        className={`font-body-md text-on-surface bg-background antialiased overflow-x-hidden transition-opacity duration-700 ${
-          isLoading ? "opacity-0" : "opacity-100"
-        }`}
+        // className={`font-body-md text-on-surface bg-background antialiased overflow-x-hidden transition-opacity duration-700 ${
+        //   isLoading ? "opacity-0" : "opacity-100"
+        // }`}
+        className="font-body-md text-on-surface bg-background antialiased overflow-x-hidden transition-opacity duration-700"
       >
         <main className="pb-32 md:pb-0">
           <Hero />
