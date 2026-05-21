@@ -1,59 +1,86 @@
+"use client";
+
 import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="relative bg-black text-white min-h-[921px] flex flex-col items-center justify-center overflow-hidden px-8">
-      
-      {/* Animated background watermark */}
+    <section className="relative overflow-hidden bg-black text-white min-h-[80vh] md:min-h-screen flex items-center">
+
+      {/* Animated background */}
       <motion.div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-10"
-        animate={{ scale: [1, 1.05, 1], rotate: [0, 1, 0] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        animate={{
+          scale: [1, 1.2, 1],
+          rotate: [0, 8, -8, 0],
+        }}
+        transition={{
+          duration: 18,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute w-[700px] h-[700px] rounded-full bg-white/5 blur-3xl -top-40 -left-40"
+      />
+
+      <motion.div
+        animate={{
+          y: [0, -30, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute right-[-20%] bottom-0 opacity-10"
       >
-        <span className="text-[40vw] font-black tracking-widest leading-none">
+        <span className="text-[200px] md:text-[500px] font-black leading-none">
           SQH
         </span>
       </motion.div>
 
-      <div className="relative z-10 text-center max-w-4xl mx-auto">
-        
+      <div className="relative z-10 px-6 md:px-12 pt-24 md:pt-0 max-w-6xl w-full">
+
         <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="font-display-xl text-[80px] font-[900]  uppercase mb-8 leading-none"
+          initial={{
+            opacity: 0,
+            y: 80,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 1,
+          }}
+          className="text-6xl md:text-[9rem] leading-none font-black uppercase tracking-tight mb-8"
         >
-          GEAR UP.<br />SHOW UP.
+          GEAR UP.
+          <br />
+          SHOW UP.
         </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-white/70 text-[18px] leading-[1.6] font-[400] tracking-normal max-w-xl mx-auto mb-12"
-        >
-          Discipline is freedom. High-performance apparel engineered for those who treat every day as the main quest.
-        </motion.p>
-
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-white text-black font-bold px-12 py-5 uppercase tracking-widest border-2 border-white transition-all"
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            delay: 0.4,
+            duration: 0.8,
+          }}
+          whileHover={{
+            scale: 1.05,
+          }}
+          whileTap={{
+            scale: 0.96,
+          }}
+          className="bg-white text-black px-8 py-4 uppercase font-bold tracking-[0.2em] border-2 border-white hover:bg-black hover:text-white transition-all duration-300"
         >
-          SHOP THE COLLECTION
+          Shop Collection
         </motion.button>
       </div>
-
-      {/* Floating scroll indicator */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-      >
-        <span className="material-symbols-outlined text-4xl">
-          arrow_downward
-        </span>
-      </motion.div>
     </section>
   );
 }
