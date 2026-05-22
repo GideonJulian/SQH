@@ -9,12 +9,12 @@ const Layouts = () => {
       <div>
         <Navbar />
       </div>
-        <Outlet />
-        <div>
-          <BottomNav />
-        </div>
+      <Outlet />
+      <div>
+        <BottomNav />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layouts
+export default Layouts;
