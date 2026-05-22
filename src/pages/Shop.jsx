@@ -260,7 +260,9 @@ export default function Shop() {
               &larr;
             </button>
 
-            <span className="text-xs font-bold">{page} / {totalPages || 1}</span>
+            <span className="text-xs font-bold">
+              {page} / {totalPages || 1}
+            </span>
 
             <button
               type="button"

@@ -6,9 +6,7 @@ import { motion } from "framer-motion";
 export default function Navbar() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b-2 border-black bg-white">
-
       <nav className="h-16 flex items-center justify-between px-6">
-
         <motion.button
           whileTap={{
             scale: 0.9,
