@@ -37,7 +37,6 @@ const itemVariants = {
 export default function FeaturedProducts() {
   return (
     <section className="hidden md:block relative py-32 px-8 max-w-[1440px] mx-auto overflow-hidden">
-
       {/* Animated ambient bg */}
       <motion.div
         animate={{

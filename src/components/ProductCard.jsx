@@ -19,7 +19,6 @@ export default function ProductCard({ product }) {
       className="group relative"
     >
       <div className="aspect-[4/5] bg-zinc-100 mb-6 overflow-hidden relative">
-
         <motion.img
           whileHover={{
             scale: 1.06,
@@ -46,9 +45,7 @@ export default function ProductCard({ product }) {
         {product.title}
       </h3>
 
-      <p className="text-lg mt-1 font-semibold">
-        {price}
-      </p>
+      <p className="text-lg mt-1 font-semibold">{price}</p>
     </motion.div>
   );
 }
