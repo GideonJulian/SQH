@@ -135,7 +135,9 @@ export default function MobileFilterOverlay({
                 min="0"
                 max={filters.priceRange.max}
                 value={filters.priceRange.min}
-                onChange={(event) => handlePriceChange("min", event.target.value)}
+                onChange={(event) =>
+                  handlePriceChange("min", event.target.value)
+                }
                 type="number"
               />
             </div>
@@ -155,7 +157,9 @@ export default function MobileFilterOverlay({
                 min={filters.priceRange.min}
                 max="500"
                 value={filters.priceRange.max}
-                onChange={(event) => handlePriceChange("max", event.target.value)}
+                onChange={(event) =>
+                  handlePriceChange("max", event.target.value)
+                }
                 type="number"
               />
             </div>
