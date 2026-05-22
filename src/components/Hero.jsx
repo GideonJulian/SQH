@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-black text-white min-h-[80vh] md:min-h-screen flex items-center">
-
       {/* Animated background */}
       <motion.div
         animate={{
@@ -37,7 +36,6 @@ export default function Hero() {
       </motion.div>
 
       <div className="relative z-10 px-6 md:px-12 pt-24 md:pt-0 max-w-6xl w-full">
-
         <motion.h1
           initial={{
             opacity: 0,
