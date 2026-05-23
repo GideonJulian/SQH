@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
 import { products } from "../data/products";
+import { useNavigate } from "react-router-dom";
 
 const containerVariants = {
+
   hidden: {},
   show: {
     transition: {
@@ -35,6 +37,7 @@ const itemVariants = {
 };
 
 export default function FeaturedProducts() {
+  const navigate = useNavigate();
   return (
     <section className="hidden md:block relative py-32 px-8 max-w-[1440px] mx-auto overflow-hidden">
       {/* Animated ambient bg */}
@@ -84,6 +87,10 @@ export default function FeaturedProducts() {
             letterSpacing: "0.2em",
           }}
           className="uppercase border-b-2 border-black pb-1 font-bold cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/shop");
+          }}
         >
           VIEW ALL PRODUCTS
         </motion.a>

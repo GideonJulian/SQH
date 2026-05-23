@@ -49,7 +49,7 @@ export default function ProductCard({ product }) {
             whileTap={{
               scale: 0.96,
             }}
-            className="flex items-center text-xs bg-white text-black px-8 py-4 uppercase  border-1 border-white transition-all duration-300 hover:bg-black hover:text-white"
+            className="flex items-center text-xs bg-white text-black px-4 py-4 uppercase  border-1 border-white transition-all duration-300 hover:bg-black hover:text-white"
             type="button"
             aria-label={`Add ${product.title} to cart`}
           >
