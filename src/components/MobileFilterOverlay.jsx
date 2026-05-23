@@ -18,7 +18,6 @@ export default function MobileFilterOverlay({
   onClear,
   onToggleCategory,
   onUpdateSize,
-  onUpdatePriceRange,
 }) {
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
@@ -28,13 +27,6 @@ export default function MobileFilterOverlay({
       document.body.style.overflow = originalOverflow;
     };
   }, []);
-
-  const handlePriceChange = (key, value) => {
-    onUpdatePriceRange({
-      ...filters.priceRange,
-      [key]: Number(value),
-    });
-  };
 
   return (
     <div className="fixed inset-0 z-[60] bg-white flex flex-col md:hidden">
@@ -116,64 +108,8 @@ export default function MobileFilterOverlay({
           </div>
         </section>
 
-        <section>
-          <h2 className="text-xl font-black text-black mb-6 tracking-tighter uppercase border-l-8 border-black pl-4">
-            PRICE RANGE
-          </h2>
-
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <label
-                htmlFor="mobile-min-price"
-                className="block font-bold text-[10px] tracking-widest mb-1"
-              >
-                MIN USD
-              </label>
-              <input
-                id="mobile-min-price"
-                className="w-full border-b-2 border-black bg-transparent py-2 text-2xl font-black focus:border-b-4 outline-none transition-all placeholder:text-black/20"
-                min="0"
-                max={filters.priceRange.max}
-                value={filters.priceRange.min}
-                onChange={(event) =>
-                  handlePriceChange("min", event.target.value)
-                }
-                type="number"
-              />
-            </div>
-
-            <div className="w-4 h-0.5 bg-black mt-4" />
-
-            <div className="flex-1">
-              <label
-                htmlFor="mobile-max-price"
-                className="block font-bold text-[10px] tracking-widest mb-1"
-              >
-                MAX USD
-              </label>
-              <input
-                id="mobile-max-price"
-                className="w-full border-b-2 border-black bg-transparent py-2 text-2xl font-black focus:border-b-4 outline-none transition-all placeholder:text-black/20"
-                min={filters.priceRange.min}
-                max="500"
-                value={filters.priceRange.max}
-                onChange={(event) =>
-                  handlePriceChange("max", event.target.value)
-                }
-                type="number"
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 relative h-1 bg-black/10">
-            <div className="absolute left-0 right-1/4 h-full bg-black" />
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-6 h-6 bg-black border-2 border-white" />
-            <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-6 h-6 bg-black border-2 border-white" />
-          </div>
-        </section>
-
         <div className="opacity-[0.03] select-none pointer-events-none">
-          <h3 className="font-display-xl text-[120px] leading-[0.8] tracking-tighter font-black">
+          <h3 className="font-display-xl text-[90px] leading-[0.8] tracking-tighter font-black">
             QUEST
             <br />
             HERO

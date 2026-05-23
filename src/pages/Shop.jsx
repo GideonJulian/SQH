@@ -366,7 +366,6 @@ export default function Shop() {
           onClear={clearFilters}
           onToggleCategory={toggleCategory}
           onUpdateSize={updateSize}
-          onUpdatePriceRange={updatePriceRange}
         />
       )}
     </main>
