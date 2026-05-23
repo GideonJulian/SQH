@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 import { products } from "../data/products";
 
 export default function MobileFeaturedCarousel() {
@@ -36,23 +37,29 @@ export default function MobileFeaturedCarousel() {
             className="flex-none w-[85%] snap-start"
           > 
             <div className="aspect-[4/5] overflow-hidden mb-4 bg-zinc-100 relative">
-              <motion.img
-                whileHover={{
-                  scale: 1.05,
-                }}
-                transition={{
-                  duration: 0.5,
-                }}
-                className="w-full h-full object-cover"
-                src={product.src}
-                alt={product.title}
-              />
+              <Link
+                to={`/product/${product.id}`}
+                className="block h-full"
+                aria-label={`View ${product.title}`}
+              >
+                <motion.img
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                  }}
+                  className="w-full h-full object-cover"
+                  src={product.src}
+                  alt={product.title}
+                />
 
-              {product.badge && (
-                <div className="absolute top-4 left-4 bg-black text-white text-[10px] px-3 py-1 uppercase tracking-widest">
-                  {product.badge}
-                </div>
-              )}
+                {product.badge && (
+                  <div className="absolute top-4 left-4 bg-black text-white text-[10px] px-3 py-1 uppercase tracking-widest">
+                    {product.badge}
+                  </div>
+                )}
+              </Link>
 
               <motion.button
                 whileTap={{
@@ -66,11 +73,13 @@ export default function MobileFeaturedCarousel() {
               </motion.button>
             </div>
 
-            <p className="font-bold uppercase tracking-tight">
-              {product.title}
-            </p>
+            <Link to={`/product/${product.id}`}>
+              <p className="font-bold uppercase tracking-tight">
+                {product.title}
+              </p>
 
-            <p className="mt-1 text-lg font-semibold">{product.price}</p>
+              <p className="mt-1 text-lg font-semibold">{product.price}</p>
+            </Link>
           </motion.div>
         ))}
       </div>

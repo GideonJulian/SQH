@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
   const price =
@@ -20,26 +21,32 @@ export default function ProductCard({ product }) {
       className="group relative"
     >
       <div className="aspect-[4/5] bg-zinc-100 mb-6 overflow-hidden relative">
-        <motion.img
-          whileHover={{
-            scale: 1.06,
-          }}
-          transition={{
-            duration: 0.7,
-          }}
-          className="w-full h-full object-cover"
-          src={product.src}
-          alt={product.title}
-        />
+        <Link
+          to={`/product/${product.id}`}
+          className="block h-full"
+          aria-label={`View ${product.title}`}
+        >
+          <motion.img
+            whileHover={{
+              scale: 1.06,
+            }}
+            transition={{
+              duration: 0.7,
+            }}
+            className="w-full h-full object-cover"
+            src={product.src}
+            alt={product.title}
+          />
 
-        {product.badge && (
-          <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] tracking-widest uppercase font-bold">
-            {product.badge}
-          </div>
-        )}
+          {product.badge && (
+            <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] tracking-widest uppercase font-bold">
+              {product.badge}
+            </div>
+          )}
 
-        {/* Glow */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Glow */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </Link>
 
         <div className="absolute left-1/2 bottom-8 z-10 hidden -translate-x-1/2 translate-y-8 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:block">
           <motion.button
@@ -70,11 +77,13 @@ export default function ProductCard({ product }) {
         </motion.button>
       </div>
 
-      <h3 className="font-bold uppercase tracking-tight text-lg">
-        {product.title}
-      </h3>
+      <Link to={`/product/${product.id}`}>
+        <h3 className="font-bold uppercase tracking-tight text-lg">
+          {product.title}
+        </h3>
 
-      <p className="text-lg mt-1 font-semibold">{price}</p>
+        <p className="text-lg mt-1 font-semibold">{price}</p>
+      </Link>
     </motion.div>
   );
 }
