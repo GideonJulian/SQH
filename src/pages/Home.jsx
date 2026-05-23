@@ -4,12 +4,14 @@ import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import MobileFeaturedCarousel from "../components/MobileFeaturedCarousel";
 import BottomNav from "../components/BottomNav";
+import { useCart } from "../context/CartContext";
 import { useAppLoading } from "../hooks/useAppLoading";
 import GlobalLoader from "../components/GlobalLoader";
 import { essentialGear } from "../data/essentialGear";
 
 export default function Home() {
   const isLoading = useAppLoading();
+  const { addToCart } = useCart();
   return (
     <>
       {/* <GlobalLoader isLoading={isLoading} /> */}
@@ -93,6 +95,7 @@ export default function Home() {
                     <button
                       className="absolute right-3 bottom-3 z-10 grid size-11 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000] active:scale-95 transition-transform"
                       type="button"
+                      onClick={() => addToCart(item)}
                       aria-label={`Add ${item.title} to cart`}
                     >
                       <ShoppingCart size={19} strokeWidth={2.5} />

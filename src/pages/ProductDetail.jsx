@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import { useCart } from "../context/CartContext";
 import { essentialGear } from "../data/essentialGear";
 import { products } from "../data/products";
 
@@ -11,6 +12,7 @@ const catalogProducts = [...products, ...essentialGear];
 
 export default function ProductDetail() {
   const { productId } = useParams();
+  const { addToCart } = useCart();
   const product = catalogProducts.find((item) => String(item.id) === productId);
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || "");
   const [quantity, setQuantity] = useState(1);
@@ -148,6 +150,12 @@ export default function ProductDetail() {
 
             <button
               type="button"
+              onClick={() =>
+                addToCart(product, {
+                  size: selectedSize,
+                  quantity,
+                })
+              }
               className="w-full bg-black text-white h-16 font-bold uppercase tracking-widest text-lg hover:bg-white hover:text-black border-2 border-black transition-all active:scale-95 flex items-center justify-center gap-3"
             >
               <ShoppingCart size={22} strokeWidth={2.5} />

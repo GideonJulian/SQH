@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 export default function ProductCard({ product }) {
+  const { addToCart } = useCart();
   const price =
     typeof product.price === "number"
       ? `$${product.price.toFixed(2)}`
@@ -58,6 +60,7 @@ export default function ProductCard({ product }) {
             }}
             className="flex items-center text-xs bg-white text-black px-4 py-4 uppercase  border-1 border-white transition-all duration-300 hover:bg-black hover:text-white"
             type="button"
+            onClick={() => addToCart(product)}
             aria-label={`Add ${product.title} to cart`}
           >
             
@@ -71,6 +74,7 @@ export default function ProductCard({ product }) {
           }}
           className="absolute right-3 bottom-3 z-10 grid size-11 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000] md:hidden"
           type="button"
+          onClick={() => addToCart(product)}
           aria-label={`Add ${product.title} to cart`}
         >
           <ShoppingCart size={19} strokeWidth={2.5} />

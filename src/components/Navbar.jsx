@@ -3,6 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, NavLink } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const navLinks = [
   {
@@ -20,6 +21,8 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const { itemCount } = useCart();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b-2 border-black bg-white">
       <nav className="h-16 flex items-center justify-between px-6 md:px-8">
@@ -48,18 +51,30 @@ export default function Navbar() {
               }
             >
               {item.label}
+              {item.path === "/cart" && itemCount > 0 && (
+                <span className="ml-2 inline-grid size-4 place-items-center bg-black text-white text-[10px]">
+                  {itemCount}
+                </span>
+              )}
             </NavLink>
           ))}
         </div>
 
-        <motion.button
+        <motion.div
           whileTap={{
             scale: 0.9,
           }}
           className="md:hidden"
         >
-          <ShoppingCart size={22} strokeWidth={2.5} />
-        </motion.button>
+          <Link to="/cart" className="relative hidden  md:block" aria-label="Open cart">
+            <ShoppingCart size={22} strokeWidth={2.5} />
+            {itemCount > 0 && (
+              <span className="absolute -top-2 -right-2 grid size-4 place-items-center bg-black text-white text-[10px] font-bold">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+        </motion.div>
       </nav>
     </header>
   );

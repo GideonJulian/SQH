@@ -3,9 +3,12 @@
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import { products } from "../data/products";
 
 export default function MobileFeaturedCarousel() {
+  const { addToCart } = useCart();
+
   return (
     <section className="md:hidden mt-16">
       <div className="px-6 mb-6 flex justify-between items-end">
@@ -67,6 +70,7 @@ export default function MobileFeaturedCarousel() {
                 }}
                 className="absolute right-4 bottom-4 z-10 grid size-12 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000]"
                 type="button"
+                onClick={() => addToCart(product)}
                 aria-label={`Add ${product.title} to cart`}
               >
                 <ShoppingCart size={20} strokeWidth={2.5} />

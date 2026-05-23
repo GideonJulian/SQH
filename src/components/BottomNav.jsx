@@ -3,6 +3,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { House, ShoppingBag, Search, ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
+import { useCart } from "../context/CartContext";
 
 const navItems = [
   {
@@ -30,6 +31,7 @@ const navItems = [
 export default function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { itemCount } = useCart();
 
   return (
     <nav className="md:hidden fixed bottom-5 left-4 right-4 z-50">
@@ -61,7 +63,18 @@ export default function BottomNav() {
                   : "text-white/80 hover:bg-white/10"
               }`}
             >
-              <Icon size={22} />
+              <span className="relative">
+                <Icon size={22} />
+                {item.path === "/cart" && itemCount > 0 && (
+                  <span
+                    className={`absolute -top-2 -right-3 grid size-4 place-items-center text-[10px] font-black ${
+                      isActive ? "bg-black text-white" : "bg-white text-black"
+                    }`}
+                  >
+                    {itemCount}
+                  </span>
+                )}
+              </span>
 
               <span className="font-black text-[10px] tracking-[0.2em] mt-1 uppercase">
                 {item.label}
