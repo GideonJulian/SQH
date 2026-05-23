@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ShoppingCart } from "lucide-react";
 
 export default function ProductCard({ product }) {
   const price =
@@ -39,6 +40,34 @@ export default function ProductCard({ product }) {
 
         {/* Glow */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+        <div className="absolute left-1/2 bottom-8 z-10 hidden -translate-x-1/2 translate-y-8 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:block">
+          <motion.button
+            whileHover={{
+              scale: 1.05,
+            }}
+            whileTap={{
+              scale: 0.96,
+            }}
+            className="flex items-center text-xs bg-white text-black px-8 py-4 uppercase  border-1 border-white transition-all duration-300 hover:bg-black hover:text-white"
+            type="button"
+            aria-label={`Add ${product.title} to cart`}
+          >
+            
+            Add to Cart
+          </motion.button>
+        </div>
+
+        <motion.button
+          whileTap={{
+            scale: 0.92,
+          }}
+          className="absolute right-3 bottom-3 z-10 grid size-11 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000] md:hidden"
+          type="button"
+          aria-label={`Add ${product.title} to cart`}
+        >
+          <ShoppingCart size={19} strokeWidth={2.5} />
+        </motion.button>
       </div>
 
       <h3 className="font-bold uppercase tracking-tight text-lg">

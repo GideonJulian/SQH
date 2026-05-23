@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ShoppingCart } from "lucide-react";
 import { products } from "../data/products";
 
 export default function MobileFeaturedCarousel() {
@@ -33,7 +34,7 @@ export default function MobileFeaturedCarousel() {
               delay: index * 0.15,
             }}
             className="flex-none w-[85%] snap-start"
-          >
+          > 
             <div className="aspect-[4/5] overflow-hidden mb-4 bg-zinc-100 relative">
               <motion.img
                 whileHover={{
@@ -52,6 +53,17 @@ export default function MobileFeaturedCarousel() {
                   {product.badge}
                 </div>
               )}
+
+              <motion.button
+                whileTap={{
+                  scale: 0.92,
+                }}
+                className="absolute right-4 bottom-4 z-10 grid size-12 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000]"
+                type="button"
+                aria-label={`Add ${product.title} to cart`}
+              >
+                <ShoppingCart size={20} strokeWidth={2.5} />
+              </motion.button>
             </div>
 
             <p className="font-bold uppercase tracking-tight">

@@ -1,3 +1,4 @@
+import { ShoppingCart } from "lucide-react";
 import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import MobileFeaturedCarousel from "../components/MobileFeaturedCarousel";
@@ -98,12 +99,20 @@ export default function Home() {
                 },
               ].map((item) => (
                 <div key={item.title}>
-                  <div className="aspect-[4/5] bg-zinc-100 mb-4 overflow-hidden">
+                  <div className="relative aspect-[4/5] bg-zinc-100 mb-4 overflow-hidden">
                     <img
                       className="w-full h-full object-cover"
                       src={item.src}
                       alt={item.title}
                     />
+
+                    <button
+                      className="absolute right-3 bottom-3 z-10 grid size-11 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000] active:scale-95 transition-transform"
+                      type="button"
+                      aria-label={`Add ${item.title} to cart`}
+                    >
+                      <ShoppingCart size={19} strokeWidth={2.5} />
+                    </button>
                   </div>
 
                   <p className="font-bold uppercase tracking-tight">
