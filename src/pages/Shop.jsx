@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Search, X } from "lucide-react";
 import MobileFilterOverlay from "../components/MobileFilterOverlay";
 import ProductCard from "../components/ProductCard";
 import { products as initialProducts } from "../data/products";
@@ -26,14 +27,30 @@ export default function Shop() {
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [sort, setSort] = useState("NEWEST ARRIVALS");
+  const [searchQuery, setSearchQuery] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const filteredProducts = useMemo(() => {
+    const normalizedQuery = searchQuery.trim().toLowerCase();
     const selectedCategories = Object.entries(filters.categories)
       .filter(([, isSelected]) => isSelected)
       .map(([category]) => category);
 
     let result = initialProducts.filter((product) => {
+      const searchableText = [
+        product.title,
+        product.category,
+        product.badge,
+        product.price,
+        ...(product.sizes || []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch =
+        !normalizedQuery || searchableText.includes(normalizedQuery);
+
       const matchesCategory =
         selectedCategories.length === 0 ||
         selectedCategories.includes(product.category);
@@ -45,7 +62,7 @@ export default function Shop() {
         product.price >= filters.priceRange.min &&
         product.price <= filters.priceRange.max;
 
-      return matchesCategory && matchesSize && matchesPrice;
+      return matchesSearch && matchesCategory && matchesSize && matchesPrice;
     });
 
     if (sort === "PRICE: LOW TO HIGH") {
@@ -63,7 +80,7 @@ export default function Shop() {
     }
 
     return result;
-  }, [filters, sort]);
+  }, [filters, searchQuery, sort]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
@@ -110,23 +127,56 @@ export default function Shop() {
     setPage(1);
   };
 
+  const updateSearchQuery = (value) => {
+    setSearchQuery(value);
+    setPage(1);
+  };
+
   const clearFilters = () => {
     setFilters(DEFAULT_FILTERS);
+    setSearchQuery("");
     setPage(1);
   };
 
   return (
     <main className="relative min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-8 pt-20">
-      <header className="md:hidden flex justify-between items-center border-b-2 border-black pb-4 mb-8">
-        <h1 className="font-black uppercase text-2xl">SQH_QUEST</h1>
+      <header className="md:hidden border-b-2 border-black pb-4 mb-8">
+        <div className="flex justify-between items-center">
+          <h1 className="font-black uppercase text-2xl">SQH_QUEST</h1>
 
-        <button
-          type="button"
-          onClick={() => setMobileFiltersOpen(true)}
-          className="border-2 border-black px-4 py-2 text-xs uppercase font-bold"
-        >
-          FILTER
-        </button>
+          <button
+            type="button"
+            onClick={() => setMobileFiltersOpen(true)}
+            className="border-2 border-black px-4 py-2 text-xs uppercase font-bold"
+          >
+            FILTER
+          </button>
+        </div>
+
+        <div className="relative mt-5">
+          <Search
+            size={18}
+            className="absolute left-0 top-1/2 -translate-y-1/2"
+          />
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(event) => updateSearchQuery(event.target.value)}
+            className="w-full border-b-2 border-black bg-transparent py-3 pl-8 pr-10 text-sm font-bold uppercase tracking-widest outline-none placeholder:text-black/30"
+            placeholder="Search products"
+            aria-label="Search products"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => updateSearchQuery("")}
+              className="absolute right-0 top-1/2 -translate-y-1/2"
+              aria-label="Clear search"
+            >
+              <X size={18} />
+            </button>
+          )}
+        </div>
       </header>
 
       <section className="hidden md:flex mb-12 flex-col md:flex-row md:items-end justify-between gap-6">
@@ -138,21 +188,51 @@ export default function Shop() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="text-xs uppercase tracking-widest opacity-60">
-            Sort:
-          </span>
+        <div className="flex items-end gap-6">
+          <div className="relative w-72">
+            <label className="block text-xs uppercase tracking-widest opacity-60 mb-2">
+              Search
+            </label>
+            <Search
+              size={18}
+              className="absolute left-0 bottom-2.5 text-black"
+            />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(event) => updateSearchQuery(event.target.value)}
+              className="w-full border-b-2 border-black bg-transparent py-2 pl-8 pr-8 text-xs uppercase font-bold outline-none placeholder:text-black/30"
+              placeholder="Product, category, size"
+              aria-label="Search products"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => updateSearchQuery("")}
+                className="absolute right-0 bottom-2.5"
+                aria-label="Clear search"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
 
-          <select
-            value={sort}
-            onChange={(event) => updateSort(event.target.value)}
-            className="border-b-2 border-black bg-transparent text-xs uppercase font-bold px-3 py-2"
-          >
-            <option>NEWEST ARRIVALS</option>
-            <option>PRICE: HIGH TO LOW</option>
-            <option>PRICE: LOW TO HIGH</option>
-            <option>BEST SELLERS</option>
-          </select>
+          <label className="flex items-center gap-4">
+            <span className="text-xs uppercase tracking-widest opacity-60">
+              Sort:
+            </span>
+
+            <select
+              value={sort}
+              onChange={(event) => updateSort(event.target.value)}
+              className="border-b-2 border-black bg-transparent text-xs uppercase font-bold px-3 py-2"
+            >
+              <option>NEWEST ARRIVALS</option>
+              <option>PRICE: HIGH TO LOW</option>
+              <option>PRICE: LOW TO HIGH</option>
+              <option>BEST SELLERS</option>
+            </select>
+          </label>
         </div>
       </section>
 
@@ -245,7 +325,9 @@ export default function Shop() {
           {paginatedProducts.length === 0 && (
             <div className="border border-dashed border-black/30 py-16 text-center mt-10">
               <p className="text-xs uppercase font-bold tracking-widest">
-                No products found
+                {searchQuery
+                  ? `No products found for "${searchQuery}"`
+                  : "No products found"}
               </p>
             </div>
           )}
