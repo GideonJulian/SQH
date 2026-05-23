@@ -4,16 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import { essentialGear } from "../data/essentialGear";
 import { products } from "../data/products";
+
+const catalogProducts = [...products, ...essentialGear];
 
 export default function ProductDetail() {
   const { productId } = useParams();
-  const product = products.find((item) => String(item.id) === productId);
+  const product = catalogProducts.find((item) => String(item.id) === productId);
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || "");
   const [quantity, setQuantity] = useState(1);
 
   const relatedProducts = useMemo(
-    () => products.filter((item) => item.id !== product?.id).slice(0, 4),
+    () => catalogProducts.filter((item) => item.id !== product?.id).slice(0, 4),
     [product],
   );
 
@@ -85,9 +88,8 @@ export default function ProductDetail() {
           </div>
 
           <p className="text-black/65 max-w-md mb-10">
-            Engineered for the disciplined. A heavy-weight technical build
-            designed to endure high-intensity training while maintaining an
-            editorial silhouette. Discipline is freedom.
+            {product.description ||
+              "Engineered for the disciplined. A heavy-weight technical build designed to endure high-intensity training while maintaining an editorial silhouette. Discipline is freedom."}
           </p>
 
           <div className="mb-10">

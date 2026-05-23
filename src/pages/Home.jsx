@@ -1,10 +1,12 @@
 import { ShoppingCart } from "lucide-react";
+import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import MobileFeaturedCarousel from "../components/MobileFeaturedCarousel";
 import BottomNav from "../components/BottomNav";
 import { useAppLoading } from "../hooks/useAppLoading";
 import GlobalLoader from "../components/GlobalLoader";
+import { essentialGear } from "../data/essentialGear";
 
 export default function Home() {
   const isLoading = useAppLoading();
@@ -73,38 +75,20 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-              {[
-                {
-                  title: "Stealth Pack 24L",
-                  price: "$180",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuArfCwI62DWBw0JiSEWbPNNSsFK5c5T3TCnFOv4AN2abggBZ7M0xM751UfFatZAu-BEUeYXVV9Pjwqxq-crpuLUNTYpQLNBF8ByffhPIGByHfov3o8LcMKsIwziyNTiUlf-VTs9DaNpGK5vr92KQ9FSKLxDuSllBUkGkQDsVkdx3ZmXSgrTC04aQ1VaYJo9SNpt3nATDZisxbkH2mEPhmN5bZsC3VhAY-t-URGI-JAaUt66iknnDesOzGexywMXlJ-k9gtLxkszNi0",
-                },
-
-                {
-                  title: "Velocity Trainer",
-                  price: "$145",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCBEMjzByYp-NNzdN-u_40zuwfCX_R4tigoG5zhngh92B2iWcz7-QFBveNgTILscAAYCAVAcRUUw2qoybzD79cJJqYDIHSjyXFb2JiMeu6dz1jyIVo-JA3fdu2OFFWWr-xWemHF6-JdG0eCmnT1uO64E_M2Ar6M5Wdd6rqGXOAcWJUfwtuIRkVeiG90yPEInTjLANcCDLGpwVibplQ_hv-SNByDNC1pMEV-GyHL7AFr_YkfC7B0XBnHpLR0SBS7eMwIXvQOuMUO7IQ",
-                },
-
-                {
-                  title: "Hero Graphic Tee",
-                  price: "$45",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDPo0rVu_o4tmrohoka-5kqtCNgbT8XY0mF4zNnCfwVFiCT43F84vN2jubmAiqWKXN-CC3DHWH10RH5A6QzsAZc-_O5kU3d8ITfLtAPlU22EEa45I-WAhzB6rWNeJ3LDFDNZogPU5luASZPO18_BeacqcUs8gH74e5KTNrb0bK4kSdEJAs1pIRcyZlkkDXPauYzuifdz4jdJTvqjBQc8DeNPNnS0ve31Z87cfZgoAKh4AeixU5WtLr6vONJC-Y9dovknjEdCWjnfkA",
-                },
-
-                {
-                  title: "Utility Shorts",
-                  price: "$85",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuBiqW5VXnyL0e_LsLGbJLT7DBnZcfAlILAwc0v9OdHWL59OsvKG6zHXO074fhS5kvof48_c1vwy3D-dtn7a_8lJCdIx0x2TSsUG2X2bG_gpWR5fxkXLap4ivJVLV8fqMf10Sg_6z_q_TclcEuiaLTFi6cIs3oFjUsaEKnyMYqJFP_CUfP5YC36QkdU3K7TsWd4jwdvzFyYcL_AOMgkMVryaRL7VTCrpoZboWabe82jd-H4rvsB2BOa60frBbNEe4sbWUlnfPv8GWIA",
-                },
-              ].map((item) => (
+              {essentialGear.map((item) => (
                 <div key={item.title}>
                   <div className="relative aspect-[4/5] bg-zinc-100 mb-4 overflow-hidden">
-                    <img
-                      className="w-full h-full object-cover"
-                      src={item.src}
-                      alt={item.title}
-                    />
+                    <Link
+                      to={`/product/${item.id}`}
+                      className="block h-full"
+                      aria-label={`View ${item.title}`}
+                    >
+                      <img
+                        className="w-full h-full object-cover"
+                        src={item.src}
+                        alt={item.title}
+                      />
+                    </Link>
 
                     <button
                       className="absolute right-3 bottom-3 z-10 grid size-11 place-items-center bg-white text-black border-2 border-black shadow-[4px_4px_0_#000] active:scale-95 transition-transform"
@@ -115,11 +99,13 @@ export default function Home() {
                     </button>
                   </div>
 
-                  <p className="font-bold uppercase tracking-tight">
-                    {item.title}
-                  </p>
+                  <Link to={`/product/${item.id}`}>
+                    <p className="font-bold uppercase tracking-tight">
+                      {item.title}
+                    </p>
 
-                  <p className="mt-1 font-semibold">{item.price}</p>
+                    <p className="mt-1 font-semibold">{item.price}</p>
+                  </Link>
                 </div>
               ))}
             </div>
