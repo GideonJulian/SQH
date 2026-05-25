@@ -81,9 +81,7 @@ export default function ProductDetail() {
           </h1>
 
           <div className="flex items-baseline gap-4 mb-8">
-            <span className="  font-black text-black">
-              {price}
-            </span>
+            <span className="  font-black text-black">{price}</span>
             <span className="text-black/40 font-bold line-through">
               $180.00
             </span>
