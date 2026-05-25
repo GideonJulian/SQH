@@ -66,7 +66,11 @@ export default function Navbar() {
           }}
           className="md:hidden"
         >
-          <Link to="/cart" className="relative hidden  md:block" aria-label="Open cart">
+          <Link
+            to="/cart"
+            className="relative hidden  md:block"
+            aria-label="Open cart"
+          >
             <ShoppingCart size={22} strokeWidth={2.5} />
             {itemCount > 0 && (
               <span className="absolute -top-2 -right-2 grid size-4 place-items-center bg-black text-white text-[10px] font-bold">
