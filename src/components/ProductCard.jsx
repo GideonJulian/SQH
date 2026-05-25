@@ -63,7 +63,6 @@ export default function ProductCard({ product }) {
             onClick={() => addToCart(product)}
             aria-label={`Add ${product.title} to cart`}
           >
-            
             Add to Cart
           </motion.button>
         </div>
