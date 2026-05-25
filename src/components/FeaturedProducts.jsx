@@ -6,7 +6,6 @@ import { products } from "../data/products";
 import { useNavigate } from "react-router-dom";
 
 const containerVariants = {
-
   hidden: {},
   show: {
     transition: {
