@@ -4,13 +4,28 @@ import Layouts from "./Layouts/Layouts";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 import ProductDetail from "./pages/ProductDetail";
 import { CartProvider } from "./context/CartContext";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 const App = () => {
   const route = createBrowserRouter([
     {
       path: "/checkout",
       element: <Checkout />,
+    },
+    {
+      path: "/admin/login",
+      element: <AdminLogin />,
+    },
+    {
+      path: "/admin",
+      element: (
+        <ProtectedAdminRoute>
+          <Admin />
+        </ProtectedAdminRoute>
+      ),
     },
     {
       path: "/",
