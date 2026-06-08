@@ -215,13 +215,16 @@ const Cart = () => {
                 </span>
               </div>
 
-              <button
-                type="button"
-                disabled={items.length === 0}
-                className="w-full bg-black text-white py-4 font-black uppercase tracking-widest hover:bg-white hover:text-black border-2 border-black transition-all duration-300 active:scale-95 mt-8 disabled:opacity-40 disabled:pointer-events-none"
+              <Link
+                aria-disabled={items.length === 0}
+                className={`block w-full bg-black text-white py-4 text-center font-black uppercase tracking-widest hover:bg-white hover:text-black border-2 border-black transition-all duration-300 active:scale-95 mt-8 ${
+                  items.length === 0 ? "opacity-40 pointer-events-none" : ""
+                }`}
+                tabIndex={items.length === 0 ? -1 : undefined}
+                to="/checkout"
               >
                 Proceed to Checkout
-              </button>
+              </Link>
             </div>
           </div>
         </div>
