@@ -4,11 +4,16 @@ import Layouts from "./Layouts/Layouts";
 import Shop from "./pages/Shop";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
-import Admin from "./pages/Admin";
+
 import AdminLogin from "./pages/AdminLogin";
 import ProductDetail from "./pages/ProductDetail";
 import { CartProvider } from "./context/CartContext";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import AdminLayout from "./Layouts/Admin/AdminLayout";
+import Dashboard from "./pages/Admin/Dashboard";
+import ProductListing from "./pages/Admin/ProductListing";
+import ProductEdit from "./pages/Admin/ProductEdit";
+import ProductUpload from "./pages/Admin/ProductUpload";
 const App = () => {
   const route = createBrowserRouter([
     {
@@ -23,9 +28,28 @@ const App = () => {
       path: "/admin",
       element: (
         <ProtectedAdminRoute>
-          <Admin />
+          <AdminLayout />
         </ProtectedAdminRoute>
       ),
+      children: [
+        {
+          index: true,
+
+          element: <ProductListing />,
+        },
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
+        {
+          path: 'upload',
+          element: <ProductUpload />
+        },
+        {
+          path: 'edit/:id',
+          element: <ProductEdit />
+        }
+      ],
     },
     {
       path: "/",

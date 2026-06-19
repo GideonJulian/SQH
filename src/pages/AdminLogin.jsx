@@ -6,10 +6,8 @@ import {
   setAdminAuthenticated,
 } from "../utils/adminAuth";
 
-const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
-const ADMIN_PASSWORD =
-  import.meta.env.VITE_ADMIN_PASSWORD || import.meta.env.VITE_ADMIN_PASSCODE;
-
+const ADMIN_EMAIL = 'gideonchinonso77@gmail.com'
+const ADMIN_PASSWORD ='123456'
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
