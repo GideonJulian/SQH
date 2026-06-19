@@ -95,7 +95,6 @@ export default function ProductUpload() {
       {/* CONTENT */}
       <div className="mx-auto mt-32 max-w-4xl px-5">
         <form onSubmit={handleSubmit} className="space-y-16">
-          
           {/* 01 IDENTITY */}
           <section className="space-y-6">
             <div className="flex items-center gap-3">
