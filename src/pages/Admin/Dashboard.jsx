@@ -3,7 +3,6 @@ import AdminLayout from "../../Layouts/Admin/AdminLayout";
 import ProductListing from "./ProductListing";
 import { setAdminAuthenticated } from "../../utils/adminAuth";
 
-
 export default function Dashboard() {
   const navigate = useNavigate();
 
@@ -12,9 +11,5 @@ export default function Dashboard() {
     navigate("/admin/login", { replace: true });
   };
 
-  return (
- <div>
-  Dashboard
- </div>
-  );
+  return <div>Dashboard</div>;
 }
