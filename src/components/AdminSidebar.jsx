@@ -12,7 +12,6 @@ const navItems = [
   { label: "Products", icon: Package, path: "/admin" },
   // { label: "Orders", icon: ShoppingCart, path: "/admin/orders" },
   // { label: "Customers", icon: Users, path: "/admin/customers" },
-
 ];
 
 export default function AdminSidebar() {
