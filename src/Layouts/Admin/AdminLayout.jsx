@@ -1,10 +1,6 @@
 import { Outlet, NavLink } from "react-router-dom";
 import AdminSidebar from "../../components/AdminSidebar";
-import {
-  Grid2X2,
-  Package,
-  ShoppingCart,
-} from "lucide-react";
+import { Grid2X2, Package, ShoppingCart } from "lucide-react";
 
 export default function AdminLayout() {
   const mobileNav = [
@@ -44,9 +40,7 @@ export default function AdminLayout() {
             }
           >
             <Icon size={22} strokeWidth={2.4} />
-            <span className="text-[10px] font-black uppercase">
-              {label}
-            </span>
+            <span className="text-[10px] font-black uppercase">{label}</span>
           </NavLink>
         ))}
       </nav>
