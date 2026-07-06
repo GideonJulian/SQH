@@ -35,7 +35,7 @@ export default function Hero() {
         </span>
       </motion.div>
 
-      <div className="relative z-10 px-6 md:px-12 pt-24 md:pt-0 max-w-6xl w-full">
+      <div className="relative z-10 px-3 md:px-12 pt-24 md:pt-0 max-w-6xl w-full">
         <motion.h1
           initial={{
             opacity: 0,
@@ -50,9 +50,9 @@ export default function Hero() {
           }}
           className="text-6xl md:text-[9rem] leading-none font-black uppercase tracking-tight mb-8"
         >
-          GEAR UP.
+          Move. 
           <br />
-          SHOW UP.
+          Different.
         </motion.h1>
 
         <motion.button
