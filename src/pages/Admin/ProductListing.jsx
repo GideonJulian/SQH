@@ -242,7 +242,7 @@ export default function ProductListing() {
                 >
                   <div className="flex min-w-0 items-center gap-4">
                     <div className="h-20 w-20 shrink-0 overflow-hidden bg-black/5">
-                      <img
+                      <ImageWithFallback
                         alt={product.title}
                         className="h-full w-full object-cover grayscale"
                         src={product.image}

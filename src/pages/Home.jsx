@@ -59,7 +59,7 @@ export default function Home() {
                   className="group relative aspect-square md:aspect-[4/3] flex items-center justify-center overflow-hidden"
                   href="#"
                 >
-                  <img
+                  <ImageWithFallback
                     className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
                     src={item.src}
                     alt={item.title}
@@ -151,7 +151,7 @@ export default function Home() {
               </div>
 
               <div className="relative group">
-                <img
+                <ImageWithFallback
                   className="w-full h-[500px] object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWFOZuPG5snfTcyGuWynYTr5N-dmGPQMQ_nQ1qtfiFUJ46rUD3FiM6mS6TmeR1xvZxPTC5fQVWSS2bsqWnPQ9mry19MK5JksKEx5TXuFkM_SZKJLN5l2cvvmv48ClvByYuk88FcCxA8hNTcQ8fUx76oNeS43E6J_c6eko5K24LKyx6Q-Lip56JRQNVBUm8cwQ9lvXTUabBmoPyolbTVQC_e_KEDrm1YoSia8WFOnxWwoYxnjej6Z56T-wzVZEeE564bwUvB76jN-w"
                   alt="community"

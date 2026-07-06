@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, dollarsToCents } from "../../services/api";
+import ImageWithFallback from "../../components/ImageWithFallback";
 
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -213,7 +214,7 @@ export default function ProductUpload() {
             <label className="block cursor-pointer border-2 border-dashed border-black p-10 text-center">
               <input type="file" hidden onChange={handleImage} accept="image/*" />
               {preview ? (
-                <img
+                <ImageWithFallback
                   src={preview}
                   alt="preview"
                   className="h-64 w-full object-cover"
