@@ -16,7 +16,7 @@ export default function ProductUpload() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    name: "",
+    title: "",
     category: "BASE LAYER",
     price: "",
     sizes: ["M", "L"],
@@ -70,7 +70,7 @@ export default function ProductUpload() {
 
     try {
       const payload = new FormData();
-      payload.append("name", form.name);
+      payload.append("title", form.title);
       payload.append("category", CATEGORY_MAP[form.category]);
       payload.append("price", String(dollarsToCents(form.price)));
       payload.append("description", form.description);
@@ -117,8 +117,8 @@ export default function ProductUpload() {
             </div>
 
             <input
-              name="name"
-              value={form.name}
+              name="title"
+              value={form.title}
               onChange={handleChange}
               placeholder="Product Name"
               className="w-full border-b border-black bg-transparent py-3 text-lg font-black uppercase outline-none"
@@ -212,7 +212,12 @@ export default function ProductUpload() {
             </div>
 
             <label className="block cursor-pointer border-2 border-dashed border-black p-10 text-center">
-              <input type="file" hidden onChange={handleImage} accept="image/*" />
+              <input
+                type="file"
+                hidden
+                onChange={handleImage}
+                accept="image/*"
+              />
               {preview ? (
                 <ImageWithFallback
                   src={preview}
