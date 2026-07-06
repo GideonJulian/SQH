@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, dollarsToCents } from "../../services/api";
+import ImageWithFallback from "../../components/ImageWithFallback";
 
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -142,7 +143,7 @@ export default function ProductEdit() {
             {/* LEFT */}
             <div className="col-span-12 lg:col-span-5 space-y-8">
               <div className="relative aspect-[4/5] border-2 border-black group">
-                <img
+                <ImageWithFallback
                   className="w-full h-full object-cover"
                   src={imagePreview}
                   alt={form.title}
@@ -284,7 +285,7 @@ export default function ProductEdit() {
         {/* IMAGE SECTION */}
         <section className="mb-10">
           <div className="relative w-full aspect-[4/5] border border-black overflow-hidden">
-            <img
+            <ImageWithFallback
               src={imagePreview}
               className="w-full h-full object-cover grayscale"
               alt="product"

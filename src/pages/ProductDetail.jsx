@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import ImageWithFallback from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
 import { api, formatPriceCents } from "../services/api";
 
@@ -67,7 +68,7 @@ export default function ProductDetail() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
         <div className="relative group">
           <div className="bg-zinc-100 aspect-[4/5] overflow-hidden flex items-center justify-center">
-            <img
+            <ImageWithFallback
               alt={product.title}
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
               src={product.image}

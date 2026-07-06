@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { api, formatPriceCents } from "../../services/api";
 import { logoutAdmin } from "../../utils/adminAuth";
+import ImageWithFallback from "../../components/ImageWithFallback";
 
 const categoryLabels = {
   outerwear: "Outerwear",
@@ -196,7 +197,7 @@ export default function ProductListing() {
                     >
                       <td className="py-6">
                         <div className="h-20 w-16 overflow-hidden border border-black/5 bg-black/5">
-                          <img
+                          <ImageWithFallback
                             alt={product.title}
                             className="h-full w-full object-cover grayscale"
                             src={product.image}

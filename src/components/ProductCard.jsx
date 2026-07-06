@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { formatPriceCents } from "../services/api";
+import ImageWithFallback from "./ImageWithFallback";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
@@ -25,17 +26,21 @@ export default function ProductCard({ product }) {
           className="block h-full"
           aria-label={`View ${product.title}`}
         >
-          <motion.img
+          <motion.div
             whileHover={{
               scale: 1.06,
             }}
             transition={{
               duration: 0.7,
             }}
-            className="w-full h-full object-cover"
-            src={product.image}
-            alt={product.title}
-          />
+            className="w-full h-full"
+          >
+            <ImageWithFallback
+              className="w-full h-full object-cover"
+              src={product.image}
+              alt={product.title}
+            />
+          </motion.div>
 
           {product.badge && (
             <div className="absolute top-4 left-4 bg-black text-white px-3 py-1 text-[10px] tracking-widest uppercase font-bold">

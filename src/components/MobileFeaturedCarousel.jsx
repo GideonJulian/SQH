@@ -6,6 +6,7 @@ import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { api, formatPriceCents } from "../services/api";
+import ImageWithFallback from "./ImageWithFallback";
 
 export default function MobileFeaturedCarousel() {
   const { addToCart } = useCart();
@@ -71,17 +72,21 @@ export default function MobileFeaturedCarousel() {
                 className="block h-full"
                 aria-label={`View ${product.title}`}
               >
-                <motion.img
+                <motion.div
                   whileHover={{
                     scale: 1.05,
                   }}
                   transition={{
                     duration: 0.5,
                   }}
-                  className="w-full h-full object-cover"
-                  src={product.image}
-                  alt={product.title}
-                />
+                  className="w-full h-full"
+                >
+                  <ImageWithFallback
+                    className="w-full h-full object-cover"
+                    src={product.image}
+                    alt={product.title}
+                  />
+                </motion.div>
 
                 {product.badge && (
                   <div className="absolute top-4 left-4 bg-black text-white text-[10px] px-3 py-1 uppercase tracking-widest">

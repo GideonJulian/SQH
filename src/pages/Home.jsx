@@ -6,6 +6,7 @@ import FeaturedProducts from "../components/FeaturedProducts";
 import MobileFeaturedCarousel from "../components/MobileFeaturedCarousel";
 import { useCart } from "../context/CartContext";
 import { api, formatPriceCents } from "../services/api";
+import ImageWithFallback from "../components/ImageWithFallback";
 
 export default function Home() {
   const { addToCart } = useCart();
@@ -92,7 +93,7 @@ export default function Home() {
                       className="block h-full"
                       aria-label={`View ${item.title}`}
                     >
-                      <img
+                      <ImageWithFallback
                         className="w-full h-full object-cover"
                         src={item.image}
                         alt={item.title}

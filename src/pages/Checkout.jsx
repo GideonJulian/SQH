@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { getPriceValue } from "../utils/prices";
 import { api } from "../services/api";
+import ImageWithFallback from "../components/ImageWithFallback";
 
 function formatPrice(value) {
   return `$${value.toFixed(2)}`;
@@ -249,7 +250,7 @@ const Checkout = () => {
                         key={item.key}
                       >
                         <div className="h-28 w-20 flex-shrink-0 bg-zinc-100 sm:h-32 sm:w-24">
-                          <img
+                          <ImageWithFallback
                             alt={item.title}
                             className="h-full w-full object-cover grayscale"
                             src={item.image || item.src}
