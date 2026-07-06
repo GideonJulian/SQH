@@ -1,6 +1,8 @@
 "use client";
+/* eslint-disable react-refresh/only-export-components */
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { getPriceValue } from "../utils/prices";
 
 const CartContext = createContext(null);
 
@@ -8,14 +10,6 @@ const CART_STORAGE_KEY = "sqh_cart_items";
 
 function getItemKey(product, size = "") {
   return `${product.id}:${size || "default"}`;
-}
-
-export function getPriceValue(price) {
-  if (typeof price === "number") {
-    return price;
-  }
-
-  return Number(String(price).replace(/[^0-9.]/g, "")) || 0;
 }
 
 export function CartProvider({ children }) {
@@ -75,6 +69,10 @@ export function CartProvider({ children }) {
     setItems((currentItems) => currentItems.filter((item) => item.key !== key));
   };
 
+  const clearCart = () => {
+    setItems([]);
+  };
+
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   const subtotal = items.reduce(
@@ -90,6 +88,7 @@ export function CartProvider({ children }) {
       addToCart,
       updateQuantity,
       removeFromCart,
+      clearCart,
     }),
     [items, itemCount, subtotal],
   );

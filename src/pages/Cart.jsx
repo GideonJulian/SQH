@@ -1,6 +1,7 @@
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getPriceValue, useCart } from "../context/CartContext";
+import { useCart } from "../context/CartContext";
+import { getPriceValue } from "../utils/prices";
 
 function formatPrice(value) {
   return `$${value.toFixed(2)}`;

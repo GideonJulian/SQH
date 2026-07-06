@@ -1,13 +1,39 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { products } from "../data/products";
+import { api, formatPriceCents } from "../services/api";
 
 export default function MobileFeaturedCarousel() {
   const { addToCart } = useCart();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const response = await api.get("/products?limit=6");
+        setProducts((response.data || []).slice(0, 3));
+      } catch {
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="md:hidden mt-16 px-6">
+        <p className="text-xs font-black uppercase tracking-widest">Loading featured products...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="md:hidden mt-16">
@@ -82,7 +108,7 @@ export default function MobileFeaturedCarousel() {
                 {product.title}
               </p>
 
-              <p className="mt-1 text-lg font-semibold">{product.price}</p>
+              <p className="mt-1 text-lg font-semibold">{formatPriceCents(product.price)}</p>
             </Link>
           </motion.div>
         ))}

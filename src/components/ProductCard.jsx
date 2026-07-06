@@ -4,13 +4,10 @@ import { motion } from "framer-motion";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { formatPriceCents } from "../services/api";
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
-  const price =
-    typeof product.price === "number"
-      ? `$${product.price.toFixed(2)}`
-      : product.price;
 
   return (
     <motion.div
@@ -85,7 +82,7 @@ export default function ProductCard({ product }) {
           {product.title}
         </h3>
 
-        <p className="text-lg mt-1 font-semibold">{price}</p>
+        <p className="text-lg mt-1 font-semibold">{formatPriceCents(product.price)}</p>
       </Link>
     </motion.div>
   );

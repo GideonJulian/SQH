@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 import MobileFilterOverlay from "../components/MobileFilterOverlay";
 import ProductCard from "../components/ProductCard";
-import { products as initialProducts } from "../data/products";
+import { api } from "../services/api";
+import { getPriceValue } from "../utils/prices";
 
 const ITEMS_PER_PAGE = 6;
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -29,6 +30,25 @@ export default function Shop() {
   const [sort, setSort] = useState("NEWEST ARRIVALS");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        setLoading(true);
+        const response = await api.get("/products?limit=100");
+        setProducts(response.data || []);
+      } catch (err) {
+        setError(err.message || "Failed to load products.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
+  }, []);
 
   const filteredProducts = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -36,12 +56,11 @@ export default function Shop() {
       .filter(([, isSelected]) => isSelected)
       .map(([category]) => category);
 
-    let result = initialProducts.filter((product) => {
+    let result = products.filter((product) => {
       const searchableText = [
         product.title,
         product.category,
         product.badge,
-        product.price,
         ...(product.sizes || []),
       ]
         .filter(Boolean)
@@ -58,9 +77,10 @@ export default function Shop() {
       const matchesSize =
         !filters.size || product.sizes?.includes(filters.size);
 
+      const priceInDollars = getPriceValue(product.price);
       const matchesPrice =
-        product.price >= filters.priceRange.min &&
-        product.price <= filters.priceRange.max;
+        priceInDollars >= filters.priceRange.min &&
+        priceInDollars <= filters.priceRange.max;
 
       return matchesSearch && matchesCategory && matchesSize && matchesPrice;
     });
@@ -80,7 +100,7 @@ export default function Shop() {
     }
 
     return result;
-  }, [filters, searchQuery, sort]);
+  }, [filters, searchQuery, sort, products]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
 
@@ -137,6 +157,22 @@ export default function Shop() {
     setSearchQuery("");
     setPage(1);
   };
+
+  if (loading) {
+    return (
+      <main className="relative min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-8 pt-20">
+        <p className="text-xs font-black uppercase tracking-widest">Loading products...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="relative min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-8 pt-20">
+        <p className="text-xs font-black uppercase tracking-widest text-red-600">{error}</p>
+      </main>
+    );
+  }
 
   return (
     <main className="relative min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-8 pt-20">

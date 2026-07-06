@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import ProductCard from "./ProductCard";
-import { products } from "../data/products";
+import { api } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 const containerVariants = {
@@ -37,6 +38,32 @@ const itemVariants = {
 
 export default function FeaturedProducts() {
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const response = await api.get("/products?limit=6");
+        setProducts(response.data || []);
+      } catch {
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="hidden md:block relative py-32 px-8 max-w-[1440px] mx-auto overflow-hidden">
+        <p className="text-xs font-black uppercase tracking-widest">Loading featured products...</p>
+      </section>
+    );
+  }
+
   return (
     <section className="hidden md:block relative py-32 px-8 max-w-[1440px] mx-auto overflow-hidden">
       {/* Animated ambient bg */}

@@ -1,37 +1,54 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Minus, Plus, ShoppingCart } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/CartContext";
-import { essentialGear } from "../data/essentialGear";
-import { products } from "../data/products";
-
-const catalogProducts = [...products, ...essentialGear];
+import { api, formatPriceCents } from "../services/api";
 
 export default function ProductDetail() {
   const { productId } = useParams();
   const { addToCart } = useCart();
-  const product = catalogProducts.find((item) => String(item.id) === productId);
-  const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || "");
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
 
-  const relatedProducts = useMemo(
-    () => catalogProducts.filter((item) => item.id !== product?.id).slice(0, 4),
-    [product],
-  );
-
   useEffect(() => {
-    setSelectedSize(product?.sizes?.[0] || "");
-    setQuantity(1);
-  }, [product]);
+    async function loadProduct() {
+      try {
+        setLoading(true);
+        const response = await api.get(`/products/${productId}`);
+        setProduct(response.data);
+        setSelectedSize(response.data.sizes?.[0] || "");
+        setQuantity(1);
+      } catch (err) {
+        setError(err.message || "Failed to load product.");
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  if (!product) {
+    loadProduct();
+  }, [productId]);
+
+  if (loading) {
+    return (
+      <main className="min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-28 pb-32">
+        <p className="text-xs font-black uppercase tracking-widest">Loading product...</p>
+      </main>
+    );
+  }
+
+  if (error || !product) {
     return (
       <main className="min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-28 pb-32">
         <div className="border-2 border-black p-10 text-center">
-          <h1 className="text-3xl font-black uppercase">Product not found</h1>
+          <h1 className="text-3xl font-black uppercase">
+            {error || "Product not found"}
+          </h1>
           <Link
             to="/shop"
             className="inline-block mt-6 bg-black text-white px-6 py-3 text-xs font-black uppercase tracking-widest"
@@ -43,10 +60,7 @@ export default function ProductDetail() {
     );
   }
 
-  const price =
-    typeof product.price === "number"
-      ? `$${product.price.toFixed(2)}`
-      : product.price;
+  const relatedProducts = product.relatedProducts || [];
 
   return (
     <main className="max-w-[1440px] mx-auto px-6 md:px-8 pt-28 pb-32">
@@ -81,7 +95,9 @@ export default function ProductDetail() {
           </h1>
 
           <div className="flex items-baseline gap-4 mb-8">
-            <span className="  font-black text-black">{price}</span>
+            <span className="font-black text-black">
+              {formatPriceCents(product.price)}
+            </span>
             <span className="text-black/40 font-bold line-through">
               $180.00
             </span>
@@ -173,29 +189,31 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <section className="mt-32 relative">
-        <div className="font-black text-black/5 absolute -top-14 left-0 text-[13vw] uppercase leading-none select-none pointer-events-none">
-          Equipment
-        </div>
+      {relatedProducts.length > 0 && (
+        <section className="mt-32 relative">
+          <div className="font-black text-black/5 absolute -top-14 left-0 text-[13vw] uppercase leading-none select-none pointer-events-none">
+            Equipment
+          </div>
 
-        <div className="flex justify-between items-end mb-12 border-b-2 border-black pb-4 relative z-10">
-          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight">
-            Complete the Set
-          </h2>
-          <Link
-            to="/shop"
-            className="font-bold uppercase text-xs tracking-widest hover:tracking-[0.2em] transition-all"
-          >
-            View All
-          </Link>
-        </div>
+          <div className="flex justify-between items-end mb-12 border-b-2 border-black pb-4 relative z-10">
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tight">
+              Complete the Set
+            </h2>
+            <Link
+              to="/shop"
+              className="font-bold uppercase text-xs tracking-widest hover:tracking-[0.2em] transition-all"
+            >
+              View All
+            </Link>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
-          {relatedProducts.map((item) => (
-            <ProductCard key={item.id} product={item} />
-          ))}
-        </div>
-      </section>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
+            {relatedProducts.map((item) => (
+              <ProductCard key={item.id} product={item} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
