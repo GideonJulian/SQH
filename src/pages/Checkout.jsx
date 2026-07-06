@@ -252,7 +252,7 @@ const Checkout = () => {
                           <img
                             alt={item.title}
                             className="h-full w-full object-cover grayscale"
-                            src={item.src}
+                            src={item.image || item.src}
                           />
                         </div>
 

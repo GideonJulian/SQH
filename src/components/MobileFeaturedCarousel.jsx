@@ -79,7 +79,7 @@ export default function MobileFeaturedCarousel() {
                     duration: 0.5,
                   }}
                   className="w-full h-full object-cover"
-                  src={product.src}
+                  src={product.image}
                   alt={product.title}
                 />
 

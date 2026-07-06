@@ -199,7 +199,7 @@ export default function ProductListing() {
                           <img
                             alt={product.title}
                             className="h-full w-full object-cover grayscale"
-                            src={product.src}
+                            src={product.image}
                           />
                         </div>
                       </td>
@@ -244,7 +244,7 @@ export default function ProductListing() {
                       <img
                         alt={product.title}
                         className="h-full w-full object-cover grayscale"
-                        src={product.src}
+                        src={product.image}
                       />
                     </div>
                     <div className="min-w-0">

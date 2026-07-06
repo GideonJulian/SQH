@@ -70,7 +70,7 @@ export default function ProductDetail() {
             <img
               alt={product.title}
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-              src={product.src}
+              src={product.image}
             />
           </div>
 

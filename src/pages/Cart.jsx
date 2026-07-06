@@ -47,7 +47,7 @@ const Cart = () => {
                     >
                       <img
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        src={item.src}
+                        src={item.image || item.src}
                         alt={item.title}
                       />
                     </Link>

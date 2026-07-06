@@ -40,7 +40,7 @@ export default function ProductEdit() {
           isActive: data.isActive ?? true,
         });
         setSizes(data.sizes || []);
-        setImagePreview(data.src || "");
+        setImagePreview(data.image || data.images?.[0]?.url || "");
       } catch (err) {
         setError(err.message || "Failed to load product.");
       } finally {

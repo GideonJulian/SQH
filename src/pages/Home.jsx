@@ -94,7 +94,7 @@ export default function Home() {
                     >
                       <img
                         className="w-full h-full object-cover"
-                        src={item.src}
+                        src={item.image}
                         alt={item.title}
                       />
                     </Link>

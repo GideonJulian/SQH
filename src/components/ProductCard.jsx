@@ -33,7 +33,7 @@ export default function ProductCard({ product }) {
               duration: 0.7,
             }}
             className="w-full h-full object-cover"
-            src={product.src}
+            src={product.image}
             alt={product.title}
           />
 
