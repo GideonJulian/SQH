@@ -1,24 +1,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api, dollarsToCents } from "../../services/api";
+import ImageWithFallback from "../../components/ImageWithFallback";
 
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+
+const CATEGORY_MAP = {
+  "BASE LAYER": "training",
+  OUTERWEAR: "outerwear",
+  FOOTWEAR: "footwear",
+  ACCESSORIES: "accessories",
+};
 
 export default function ProductUpload() {
   const navigate = useNavigate();
 
-  // FORM STATE (easy to connect to API later)
   const [form, setForm] = useState({
-    name: "",
+    title: "",
     category: "BASE LAYER",
     price: "",
     sizes: ["M", "L"],
     image: null,
     description: "",
+    sku: "",
+    stock: "",
   });
-
   const [preview, setPreview] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
-  // HANDLE INPUT CHANGE
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -28,7 +38,6 @@ export default function ProductUpload() {
     }));
   };
 
-  // SIZE TOGGLE
   const toggleSize = (size) => {
     setForm((prev) => {
       const exists = prev.sizes.includes(size);
@@ -42,7 +51,6 @@ export default function ProductUpload() {
     });
   };
 
-  // IMAGE UPLOAD (API-ready)
   const handleImage = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -55,26 +63,30 @@ export default function ProductUpload() {
     setPreview(URL.createObjectURL(file));
   };
 
-  // SUBMIT (PLACEHOLDER FOR API)
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setIsSubmitting(true);
 
-    // 👉 THIS IS WHERE YOU PLUG YOUR API
-    const payload = new FormData();
-    payload.append("name", form.name);
-    payload.append("category", form.category);
-    payload.append("price", form.price);
-    payload.append("description", form.description);
-    payload.append("sizes", JSON.stringify(form.sizes));
-    if (form.image) payload.append("image", form.image);
+    try {
+      const payload = new FormData();
+      payload.append("title", form.title);
+      payload.append("category", CATEGORY_MAP[form.category]);
+      payload.append("price", String(dollarsToCents(form.price)));
+      payload.append("description", form.description);
+      payload.append("sizes", JSON.stringify(form.sizes));
+      if (form.sku) payload.append("sku", form.sku);
+      if (form.stock) payload.append("stock", String(Number(form.stock) || 0));
+      if (form.image) payload.append("image", form.image);
 
-    console.log("UPLOAD PAYLOAD:", Object.fromEntries(payload));
+      await api.post("/admin/products", payload);
 
-    // Example API later:
-    // await fetch("/api/products", { method: "POST", body: payload });
-
-    alert("Product ready for API upload 🚀");
-    navigate("/admin");
+      navigate("/admin");
+    } catch (err) {
+      setError(err.message || "Failed to upload product.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -105,11 +117,12 @@ export default function ProductUpload() {
             </div>
 
             <input
-              name="name"
-              value={form.name}
+              name="title"
+              value={form.title}
               onChange={handleChange}
               placeholder="Product Name"
               className="w-full border-b border-black bg-transparent py-3 text-lg font-black uppercase outline-none"
+              required
             />
 
             <div className="grid grid-cols-2 gap-4">
@@ -131,6 +144,29 @@ export default function ProductUpload() {
                 onChange={handleChange}
                 placeholder="Price (USD)"
                 className="border-b border-black bg-transparent py-3 font-bold outline-none"
+                required
+                type="number"
+                step="0.01"
+                min="0"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                name="sku"
+                value={form.sku}
+                onChange={handleChange}
+                placeholder="SKU (optional)"
+                className="border-b border-black bg-transparent py-3 font-bold outline-none"
+              />
+              <input
+                name="stock"
+                value={form.stock}
+                onChange={handleChange}
+                placeholder="Stock (optional)"
+                className="border-b border-black bg-transparent py-3 font-bold outline-none"
+                type="number"
+                min="0"
               />
             </div>
           </section>
@@ -176,9 +212,14 @@ export default function ProductUpload() {
             </div>
 
             <label className="block cursor-pointer border-2 border-dashed border-black p-10 text-center">
-              <input type="file" hidden onChange={handleImage} />
+              <input
+                type="file"
+                hidden
+                onChange={handleImage}
+                accept="image/*"
+              />
               {preview ? (
-                <img
+                <ImageWithFallback
                   src={preview}
                   alt="preview"
                   className="h-64 w-full object-cover"
@@ -208,13 +249,20 @@ export default function ProductUpload() {
             />
           </section>
 
+          {error && (
+            <p className="text-xs font-black uppercase tracking-widest text-red-600">
+              {error}
+            </p>
+          )}
+
           {/* ACTION */}
           <div className="flex justify-end">
             <button
               type="submit"
-              className="bg-black px-10 py-5 font-bold uppercase text-white"
+              disabled={isSubmitting}
+              className="bg-black px-10 py-5 font-bold uppercase text-white disabled:opacity-50"
             >
-              Publish Product
+              {isSubmitting ? "Publishing..." : "Publish Product"}
             </button>
           </div>
         </form>

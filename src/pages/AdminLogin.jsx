@@ -3,15 +3,14 @@ import { Shield } from "lucide-react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import {
   isAdminAuthenticated,
-  setAdminAuthenticated,
+  loginAdmin,
 } from "../utils/adminAuth";
 
-const ADMIN_EMAIL = 'gideonchinonso77@gmail.com'
-const ADMIN_PASSWORD ='123456'
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const redirectTo = location.state?.from || "/admin";
@@ -20,24 +19,19 @@ export default function AdminLogin() {
     return <Navigate replace to={redirectTo} />;
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
+    setIsLoading(true);
 
-    if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-      setError("Admin credentials are not configured.");
-      return;
+    try {
+      await loginAdmin(email.trim(), password);
+      navigate(redirectTo, { replace: true });
+    } catch (err) {
+      setError(err.message || "Invalid admin credentials.");
+    } finally {
+      setIsLoading(false);
     }
-
-    if (
-      email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase() ||
-      password !== ADMIN_PASSWORD
-    ) {
-      setError("Invalid admin credentials.");
-      return;
-    }
-
-    setAdminAuthenticated(true);
-    navigate(redirectTo, { replace: true });
   };
 
   return (
@@ -120,10 +114,11 @@ export default function AdminLogin() {
           )}
 
           <button
-            className="mt-2 h-16 w-full border-2 border-white bg-white text-lg font-black uppercase tracking-tight text-black transition-all hover:bg-transparent hover:text-white active:scale-[0.98]"
+            className="mt-2 h-16 w-full border-2 border-white bg-white text-lg font-black uppercase tracking-tight text-black transition-all hover:bg-transparent hover:text-white active:scale-[0.98] disabled:opacity-50"
+            disabled={isLoading}
             type="submit"
           >
-            Login
+            {isLoading ? "Authenticating..." : "Login"}
           </button>
         </form>
 

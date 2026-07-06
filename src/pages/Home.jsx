@@ -1,26 +1,34 @@
+import { useEffect, useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import MobileFeaturedCarousel from "../components/MobileFeaturedCarousel";
-import BottomNav from "../components/BottomNav";
 import { useCart } from "../context/CartContext";
-import { useAppLoading } from "../hooks/useAppLoading";
-import GlobalLoader from "../components/GlobalLoader";
-import { essentialGear } from "../data/essentialGear";
+import { api, formatPriceCents } from "../services/api";
+import ImageWithFallback from "../components/ImageWithFallback";
 
 export default function Home() {
-  const isLoading = useAppLoading();
   const { addToCart } = useCart();
+  const [essentialGear, setEssentialGear] = useState([]);
+
+  useEffect(() => {
+    async function loadEssentialGear() {
+      try {
+        const response = await api.get("/products?category=accessories&limit=4");
+        setEssentialGear(response.data || []);
+      } catch {
+        setEssentialGear([]);
+      }
+    }
+
+    loadEssentialGear();
+  }, []);
+
   return (
     <>
       {/* <GlobalLoader isLoading={isLoading} /> */}
-      <div
-        // className={`font-body-md text-on-surface bg-background antialiased overflow-x-hidden transition-opacity duration-700 ${
-        //   isLoading ? "opacity-0" : "opacity-100"
-        // }`}
-        className="font-body-md text-on-surface bg-background antialiased overflow-x-hidden transition-opacity duration-700"
-      >
+      <div className="font-body-md text-on-surface bg-background antialiased overflow-x-hidden transition-opacity duration-700">
         <main className="pb-32 md:pb-0">
           <Hero />
 
@@ -35,15 +43,15 @@ export default function Home() {
                 },
                 {
                   title: "HOODIES",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCev6BmyVol9r5tOyeMbDlquYIN4ZWQj1h8J6UD8pRG1IFQXPDBdoSj78lL1q1mdLtTDzutmy-Ea5vegFOK93B2v4sXOokaHL8uhs0zxqtv1I9Wn2GI82psBikAXOTWaKzP3SmoEXIygP1IvntDzTrvW3xsA12XeI3AW_hLaBCWF1yGON-jZZdISOaS7quixHTXNMuunoSa1Z6PqgYLf_leqXg4oWqxPDuEgRqW4OadNRlUZf874XzBcQvPlucpmptrlH_H74bVyAM",
+                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuCev6BmyVol9r5tOyeMbDlquYIN-4ZWQj1h8J6UD8pRG1IFQXPDBdoSj78lL1q1mdLtTDzutmy-Ea5vegFOK93B2v4sXOokaHL8uhs0zxqtv1I9Wn2GI82psBikAXOTWaKzP3SmoEXIygP1IvntDzTrvW3xsA12XeI3AW_hLaBCWF1yGON-jZZdISOaS7quixHTXNMuunoSa1Z6PqgYLf_leqXg4oWqxPDuEgRqW4OadNRlUZf874XzBcQvPlucpmptrlH_H74bVyAM",
                 },
                 {
                   title: "CAPS",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDcvpxesKI3kJZAcyUFcIeYEISsr9YOkHxknoi_7fCERqRh4NsL2xR3EGazrFXXQwoRz-nI-0khyTSfYRJeizfLtUaRa1OhBTQKu_yrM0ZliPLvD9trGYrElQrLMd6b4mGaD-DIaWQQ1SZ2ZybxC5KmR5N62o3uetYo8xqyel3yEcN-w1kEIqqxz9x9WfgVcpoI6tqR9V9ukwBVJjW4PP5DWYftcTPSg-NDritpOgQ77T8CO4SRaZU3_Ew6hDqkz8zcQak661Vuvzg",
+                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuDcvpxesKI-3kJZAcyUFcIeYEISsr9YOkHxknoi_7fCERqRh4NsL2xR3EGazrFXXQwoRz-nI-0khyTSfYRJeizfLtUaRa1OhBTQKu_yrM0ZliPLvD9trGYrElQrLMd6b4mGaD-DIaWQQ1SZ2ZybxC5KmR5N62o3uetYo8xqyel3yEcN-w1kEIqqxz9x9WfgVcpoI6tqR9V9ukwBVJjW4PP5DWYftcTPSg-NDritpOgQ77T8CO4SRaZU3_Ew6hDqkz8zcQak661Vuvzg",
                 },
                 {
                   title: "ACCESSORIES",
-                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-SlwbRxXhF7MuzlGMbLNBf2jANx4F23M5UerVoR55kr4S_lAduxb2cNfXVDu9pNkFToOXSW9AMdB9QitF3vkMXe_81ys-iENJI9bj0IZBCgKmyjtMVlB19gG6doxAjBf9PDIRDAEMlT8XiXyogBDw3aCeEFbaVFkecrv2IXVHyzdKMOKobfg51mIZJWv2TpxasWUaTGu3-c5x6eWH3Plonaebsz-gLDZu5bX2Sxzf46zBTc4Ugso9_dC6EFmOGiR05VQhKhsNNRE",
+                  src: "https://lh3.googleusercontent.com/aida-public/AB6AXuC-SlwbRxXhF7MuzlGMbLNBf2jANx4F23M5UerVoER55kr4S_lAduxb2cNfXVDu9pNkFToOXSW9AMdB9QitF3vkMXe_81ys-iENJI9bj0IZBCgKmyjtMVlB19gG6doxAjBf9PDIRDAEMlT8XiXyogBDw3aCeEFbaVFkecrv2IXVHyzdKMOKobfg51mIZJWv2TpxasWUaTGu3-c5x6eWH3Plonaebsz-gLDZu5bX2Sxzf46zBTc4Ugso9_dC6EFmOGiR05VQhKhsNNRE",
                 },
               ].map((item) => (
                 <a
@@ -51,7 +59,7 @@ export default function Home() {
                   className="group relative aspect-square md:aspect-[4/3] flex items-center justify-center overflow-hidden"
                   href="#"
                 >
-                  <img
+                  <ImageWithFallback
                     className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500"
                     src={item.src}
                     alt={item.title}
@@ -78,16 +86,16 @@ export default function Home() {
 
             <div className="grid grid-cols-2 gap-x-4 gap-y-10">
               {essentialGear.map((item) => (
-                <div key={item.title}>
+                <div key={item.id}>
                   <div className="relative aspect-[4/5] bg-zinc-100 mb-4 overflow-hidden">
                     <Link
                       to={`/product/${item.id}`}
                       className="block h-full"
                       aria-label={`View ${item.title}`}
                     >
-                      <img
+                      <ImageWithFallback
                         className="w-full h-full object-cover"
-                        src={item.src}
+                        src={item.image}
                         alt={item.title}
                       />
                     </Link>
@@ -107,7 +115,7 @@ export default function Home() {
                       {item.title}
                     </p>
 
-                    <p className="mt-1 font-semibold">{item.price}</p>
+                    <p className="mt-1 font-semibold">{formatPriceCents(item.price)}</p>
                   </Link>
                 </div>
               ))}
@@ -143,7 +151,7 @@ export default function Home() {
               </div>
 
               <div className="relative group">
-                <img
+                <ImageWithFallback
                   className="w-full h-[500px] object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWFOZuPG5snfTcyGuWynYTr5N-dmGPQMQ_nQ1qtfiFUJ46rUD3FiM6mS6TmeR1xvZxPTC5fQVWSS2bsqWnPQ9mry19MK5JksKEx5TXuFkM_SZKJLN5l2cvvmv48ClvByYuk88FcCxA8hNTcQ8fUx76oNeS43E6J_c6eko5K24LKyx6Q-Lip56JRQNVBUm8cwQ9lvXTUabBmoPyolbTVQC_e_KEDrm1YoSia8WFOnxWwoYxnjej6Z56T-wzVZEeE564bwUvB76jN-w"
                   alt="community"

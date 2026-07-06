@@ -1,11 +1,4 @@
-import {
-  Grid2X2,
-  Package,
-  ShoppingCart,
-  Users,
-  User,
-  Plus,
-} from "lucide-react";
+import { Grid2X2, Package, User, Plus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 const navItems = [
   { label: "Dashboard", icon: Grid2X2, path: "/admin/dashboard" },
@@ -18,9 +11,6 @@ export default function AdminSidebar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleTabClick = (path) => {
-    navigate(path);
-  };
   return (
     <aside className="fixed left-0 top-0 z-50 hidden h-screen w-64 flex-col border-r-2 border-black bg-white lg:flex">
       <div className="px-8 py-10">

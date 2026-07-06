@@ -1,6 +1,8 @@
 import { ArrowLeft, Minus, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getPriceValue, useCart } from "../context/CartContext";
+import { useCart } from "../context/CartContext";
+import { getPriceValue } from "../utils/prices";
+import ImageWithFallback from "../components/ImageWithFallback";
 
 function formatPrice(value) {
   return `$${value.toFixed(2)}`;
@@ -44,9 +46,9 @@ const Cart = () => {
                       className="block aspect-[4/5] bg-zinc-100 overflow-hidden"
                       aria-label={`View ${item.title}`}
                     >
-                      <img
+                      <ImageWithFallback
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        src={item.src}
+                        src={item.image || item.src}
                         alt={item.title}
                       />
                     </Link>
