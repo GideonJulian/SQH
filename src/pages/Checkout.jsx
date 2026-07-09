@@ -302,12 +302,12 @@ const Checkout = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between border-b border-black/10 pb-4">
+                {/* <div className="flex items-center justify-between border-b border-black/10 pb-4">
                   <span className="text-xs font-black uppercase tracking-widest">
                     Tax
                   </span>
                   <span className="text-xl font-black">{formatPrice(tax)}</span>
-                </div>
+                </div> */}
               </div>
 
               <div className="mb-10 flex items-center justify-between gap-4">
