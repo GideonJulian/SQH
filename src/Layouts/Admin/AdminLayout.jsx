@@ -1,8 +1,11 @@
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 import AdminSidebar from "../../components/AdminSidebar";
 import { Grid2X2, Package, ShoppingCart } from "lucide-react";
 
 export default function AdminLayout() {
+  const location = useLocation();
+  const hideMobileNav = location.pathname === "/admin/dashboard";
+
   const mobileNav = [
     {
       label: "Dashboard",
@@ -27,7 +30,11 @@ export default function AdminLayout() {
 
       <Outlet />
 
-      <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t-2 border-black bg-white py-4 lg:hidden">
+      <nav
+        className={`fixed bottom-0 left-0 z-50 w-full items-center justify-around border-t-2 border-black bg-white py-4 lg:hidden ${
+          hideMobileNav ? "hidden" : "flex"
+        }`}
+      >
         {mobileNav.map(({ label, icon: Icon, path }) => (
           <NavLink
             key={label}
