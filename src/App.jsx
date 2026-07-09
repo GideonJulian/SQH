@@ -33,22 +33,21 @@ const App = () => {
       ),
       children: [
         {
-          index: true,
-
+          path: "products",
           element: <ProductListing />,
         },
         {
-          path: "dashboard",
+          index: true,
           element: <Dashboard />,
         },
         {
-          path: 'upload',
-          element: <ProductUpload />
+          path: "upload",
+          element: <ProductUpload />,
         },
         {
-          path: 'edit/:id',
-          element: <ProductEdit />
-        }
+          path: "edit/:id",
+          element: <ProductEdit />,
+        },
       ],
     },
     {

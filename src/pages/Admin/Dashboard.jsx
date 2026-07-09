@@ -318,7 +318,7 @@ export default function Dashboard() {
         )}
       </div>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t-2 border-black bg-white px-4 lg:hidden">
+      {/* <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t-2 border-black bg-white px-4 lg:hidden">
         {mobileNavItems.map(({ label, icon: Icon, path, active }) => (
           <button
             key={label}
@@ -340,7 +340,7 @@ export default function Dashboard() {
         >
           <Plus size={30} strokeWidth={2.4} />
         </button>
-      </nav>
+      </nav> */}
 
       <div className="mx-auto hidden max-w-[1440px] px-12 py-12 lg:block">
         {loading && (
