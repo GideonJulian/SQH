@@ -1,6 +1,6 @@
 import { Outlet, NavLink } from "react-router-dom";
 import AdminSidebar from "../../components/AdminSidebar";
-import { Grid2X2, Package, ShoppingCart } from "lucide-react";
+import { ClipboardList, Grid2X2, Package, PlusCircleIcon, ShoppingCart, Upload } from "lucide-react";
 
 export default function AdminLayout() {
   const mobileNav = [
@@ -9,16 +9,17 @@ export default function AdminLayout() {
       icon: Grid2X2,
       path: "/admin",
     },
+      {
+      label: "Upload",
+      icon: PlusCircleIcon,
+      path: "/admin/upload",
+    },
     {
       label: "Products",
       icon: Package,
       path: "/admin/products",
     },
-    {
-      label: "Orders",
-      icon: ShoppingCart,
-      path: "/admin/orders",
-    },
+  
   ];
 
   return (

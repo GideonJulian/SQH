@@ -88,7 +88,7 @@
           </div>
 
           <div className="flex items-center gap-5">
-            <button
+            {/* <button
               aria-label="Notifications"
               className="hover:opacity-60"
               type="button"
@@ -101,7 +101,7 @@
               type="button"
             >
               <Settings size={22} />
-            </button>
+            </button> */}
             <button
               aria-label="Logout"
               className="hidden hover:opacity-60 lg:block"

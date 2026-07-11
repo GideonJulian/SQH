@@ -15,6 +15,7 @@ import ProductListing from "./pages/Admin/ProductListing";
 import ProductEdit from "./pages/Admin/ProductEdit";
 import ProductUpload from "./pages/Admin/ProductUpload";
 import Orders from "./pages/Admin/Orders";
+import OrderDetail from "./pages/Admin/OrderDetail";
 const App = () => {
   const route = createBrowserRouter([
     {
@@ -48,6 +49,10 @@ const App = () => {
         {
           path: "orders",
           element: <Orders />,
+        },
+        {
+          element: <OrderDetail />,
+          path: "orders/:id",
         },
         {
           path: "edit/:id",

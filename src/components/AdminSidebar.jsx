@@ -1,7 +1,7 @@
 import { Grid2X2, Package, User, Plus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 const navItems = [
-  { label: "Dashboard", icon: Grid2X2, path: "/admin/dashboard" },
+  { label: "Dashboard", icon: Grid2X2, path: "/admin/" },
   { label: "Products", icon: Package, path: "/admin" },
   // { label: "Orders", icon: ShoppingCart, path: "/admin/orders" },
   // { label: "Customers", icon: Users, path: "/admin/customers" },

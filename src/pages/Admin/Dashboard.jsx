@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { api, formatPriceCents } from "../../services/api";
 import { logoutAdmin } from "../../utils/adminAuth";
+import DashboardSkeleton from "../../components/DasboardSkeleton";
 
 function getResponsePayload(response) {
   return response?.data ?? response;
@@ -71,6 +72,7 @@ function normalizeOrder(order) {
 
   return {
     id: order.orderNumber || order.number || order.id || "N/A",
+    rawId: order.id,
     customer: order.customerName || order.customer?.name || "Unknown Customer",
     email: order.customerEmail || order.customer?.email || "No email",
     date: formatOrderDate(order.createdAt || order.date || order.updatedAt),
@@ -79,7 +81,6 @@ function normalizeOrder(order) {
     filled: filledStatuses.includes(normalizedStatus),
   };
 }
-
 export default function Dashboard() {
   const navigate = useNavigate();
   const [summary, setSummary] = useState(null);
@@ -98,7 +99,9 @@ export default function Dashboard() {
         ]);
 
         setSummary(getResponsePayload(summaryResponse));
-        setRecentOrders(getCollection(getResponsePayload(ordersResponse)).map(normalizeOrder));
+        setRecentOrders(
+          getCollection(getResponsePayload(ordersResponse)).map(normalizeOrder),
+        );
       } catch (err) {
         setError(err.message || "Failed to load dashboard data.");
       } finally {
@@ -115,7 +118,12 @@ export default function Dashboard() {
   };
 
   const mobileNavItems = [
-    { label: "Dashboard", icon: Grid2X2, path: "/admin/dashboard", active: true },
+    {
+      label: "Dashboard",
+      icon: Grid2X2,
+      path: "/admin/dashboard",
+      active: true,
+    },
     { label: "Products", icon: Package, path: "/admin" },
     { label: "Orders", icon: ShoppingCart, path: "/admin/orders" },
     { label: "Heroes", icon: Users, path: "/admin/customers" },
@@ -127,18 +135,20 @@ export default function Dashboard() {
     <main className="min-h-screen bg-white text-black lg:ml-64 lg:pt-24">
       <header className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center justify-between border-b-2 border-black bg-white px-4 lg:hidden">
         <div className="flex items-center gap-3">
-          <button
+          {/* <button
             type="button"
             aria-label="Open navigation"
             onClick={() => setMenuOpen(true)}
             className="flex h-10 w-10 items-center justify-center text-black"
           >
             <Menu size={24} strokeWidth={2.4} />
-          </button>
-          <span className="text-xl font-black italic uppercase tracking-tight">SQH Admin</span>
+          </button> */}
+          <span className="text-xl font-black italic uppercase tracking-tight">
+            SQH Admin
+          </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <button
             type="button"
             aria-label="Search"
@@ -154,7 +164,7 @@ export default function Dashboard() {
             <Bell size={22} strokeWidth={2.4} />
             <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-black" />
           </button>
-        </div>
+        </div> */}
       </header>
 
       <aside
@@ -171,7 +181,9 @@ export default function Dashboard() {
         <div className="relative flex h-full w-64 flex-col border-r-2 border-black bg-white">
           <div className="flex items-center justify-between border-b-2 border-black p-6">
             <div>
-              <h2 className="text-2xl font-black italic uppercase tracking-tight">SQH Admin</h2>
+              <h2 className="text-2xl font-black italic uppercase tracking-tight">
+                SQH Admin
+              </h2>
               <p className="mt-1 text-[10px] font-black uppercase tracking-tight text-black/40">
                 Performance Command
               </p>
@@ -186,24 +198,28 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <nav className="flex-grow overflow-y-auto py-4">
-            {mobileNavItems.slice(0, 4).map(({ label, icon: Icon, path, active }) => (
-              <button
-                key={label}
-                type="button"
-                onClick={() => {
-                  setMenuOpen(false);
-                  navigate(path);
-                }}
-                className={`flex w-full items-center gap-4 px-6 py-4 text-left text-sm font-black uppercase tracking-tight ${
-                  active ? "bg-black text-white" : "text-black/50 hover:bg-black/5"
-                }`}
-              >
-                <Icon size={22} strokeWidth={2.4} />
-                {label}
-              </button>
-            ))}
-          </nav>
+          {/* <nav className="flex-grow overflow-y-auto py-4">
+            {mobileNavItems
+              .slice(0, 4)
+              .map(({ label, icon: Icon, path, active }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate(path);
+                  }}
+                  className={`flex w-full items-center gap-4 px-6 py-4 text-left text-sm font-black uppercase tracking-tight ${
+                    active
+                      ? "bg-black text-white"
+                      : "text-black/50 hover:bg-black/5"
+                  }`}
+                >
+                  <Icon size={22} strokeWidth={2.4} />
+                  {label}
+                </button>
+              ))}
+          </nav> */}
 
           <div className="mt-auto border-t-2 border-black p-6">
             <button
@@ -222,7 +238,9 @@ export default function Dashboard() {
       </aside>
 
       <header className="fixed top-0 right-0 left-0 z-40 hidden items-center justify-between border-b-2 border-black bg-white px-5 py-4 lg:left-64 lg:flex lg:px-8">
-        <h1 className="text-xl font-black uppercase tracking-tight">Dashboard</h1>
+        <h1 className="text-xl font-black uppercase tracking-tight">
+          Dashboard
+        </h1>
         <button
           type="button"
           onClick={handleLogout}
@@ -243,11 +261,14 @@ export default function Dashboard() {
         </section>
 
         {loading && (
-          <p className="mb-8 text-xs font-black uppercase tracking-widest">Loading summary...</p>
+          // <p className="mb-8 text-xs font-black uppercase tracking-widest">Loading summary...</p>
+          <DashboardSkeleton />
         )}
 
         {error && (
-          <p className="mb-8 text-xs font-black uppercase tracking-widest text-red-600">{error}</p>
+          <p className="mb-8 text-xs font-black uppercase tracking-widest text-red-600">
+            {error}
+          </p>
         )}
 
         {summary && (
@@ -266,7 +287,9 @@ export default function Dashboard() {
                   <h2 className="text-[44px] font-black leading-none tracking-tight">
                     {formatPriceCents(summary.revenueToday)}
                   </h2>
-                  <span className="text-xs font-black uppercase text-green-600">Today</span>
+                  <span className="text-xs font-black uppercase text-green-600">
+                    Today
+                  </span>
                 </div>
               </div>
 
@@ -291,8 +314,6 @@ export default function Dashboard() {
               </div>
             </section>
 
-          
-
             <section className="mb-8">
               <div className="mb-6 flex items-end justify-between gap-4">
                 <h3 className="text-[30px] font-black uppercase leading-none tracking-tight">
@@ -312,6 +333,7 @@ export default function Dashboard() {
                   mobileOrders.map((order) => (
                     <div
                       key={order.id}
+                      onClick={() => navigate(`/admin/orders/${order.rawId}`)}
                       className="flex items-center justify-between gap-4 border-2 border-black bg-white p-4 active:scale-[0.98] active:bg-black active:text-white"
                     >
                       <div className="min-w-0">
@@ -332,7 +354,9 @@ export default function Dashboard() {
                         >
                           {order.status}
                         </span>
-                        <span className="mt-1 block text-sm font-black">{order.amount}</span>
+                        <span className="mt-1 block text-sm font-black">
+                          {order.amount}
+                        </span>
                       </div>
                     </div>
                   ))
@@ -345,8 +369,6 @@ export default function Dashboard() {
                 )}
               </div>
             </section>
-
-          
           </>
         )}
       </div>
@@ -377,11 +399,15 @@ export default function Dashboard() {
 
       <div className="mx-auto hidden max-w-[1440px] px-12 py-12 lg:block">
         {loading && (
-          <p className="text-xs font-black uppercase tracking-widest">Loading summary...</p>
+          <p className="text-xs font-black uppercase tracking-widest">
+            Loading summary...
+          </p>
         )}
 
         {error && (
-          <p className="text-xs font-black uppercase tracking-widest text-red-600">{error}</p>
+          <p className="text-xs font-black uppercase tracking-widest text-red-600">
+            {error}
+          </p>
         )}
 
         {summary && (
@@ -405,7 +431,9 @@ export default function Dashboard() {
                     {formatPriceCents(summary.revenueToday)}
                   </p>
                   <p className="mt-4 flex items-center gap-1 text-sm font-bold uppercase text-black">
-                    <span className="material-symbols-outlined text-sm">trending_up</span>
+                    <span className="material-symbols-outlined text-sm">
+                      trending_up
+                    </span>
                     Revenue captured today
                   </p>
                 </div>
@@ -418,7 +446,9 @@ export default function Dashboard() {
                     {summary.activeProducts}
                   </p>
                   <p className="mt-4 flex items-center gap-1 text-sm font-bold uppercase text-black">
-                    <span className="material-symbols-outlined text-sm">bolt</span>
+                    <span className="material-symbols-outlined text-sm">
+                      bolt
+                    </span>
                     Catalog deployment live
                   </p>
                 </div>
@@ -431,7 +461,9 @@ export default function Dashboard() {
                     {summary.totalProducts}
                   </p>
                   <p className="mt-4 flex items-center gap-1 text-sm font-bold uppercase text-black">
-                    <span className="material-symbols-outlined text-sm">inventory_2</span>
+                    <span className="material-symbols-outlined text-sm">
+                      inventory_2
+                    </span>
                     {summary.lowStockProducts} low stock signals
                   </p>
                 </div>
@@ -497,7 +529,11 @@ export default function Dashboard() {
                   <tbody className="divide-y divide-black">
                     {recentOrders.length > 0 ? (
                       recentOrders.map((order) => (
-                        <tr key={order.id} className="cursor-default hover:bg-black/[0.03]">
+                        <tr
+                          key={order.id}
+                            onClick={() => navigate(`/admin/orders/${order.rawId}`)}
+                          className="cursor-default hover:bg-black/[0.03]"
+                        >
                           <td className="px-8 py-6 font-mono text-sm font-black">
                             {order.id}
                           </td>
@@ -506,10 +542,14 @@ export default function Dashboard() {
                               <span className="font-black uppercase text-black">
                                 {order.customer}
                               </span>
-                              <span className="text-xs text-black/50">{order.email}</span>
+                              <span className="text-xs text-black/50">
+                                {order.email}
+                              </span>
                             </div>
                           </td>
-                          <td className="px-8 py-6 text-sm font-bold uppercase">{order.date}</td>
+                          <td className="px-8 py-6 text-sm font-bold uppercase">
+                            {order.date}
+                          </td>
                           <td className="px-8 py-6">
                             <span
                               className={`px-3 py-1 text-[10px] font-black uppercase tracking-tight ${

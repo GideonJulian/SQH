@@ -7,16 +7,14 @@ import { api } from "../services/api";
 import ImageWithFallback from "../components/ImageWithFallback";
 
 function formatPrice(value) {
-   return `₦${value.toFixed(2)}`;
+  return `₦${value.toFixed(2)}`;
 }
-
-const TAX_RATE = 0.08;
 
 const Checkout = () => {
   const { items, subtotal, clearCart } = useCart();
   const navigate = useNavigate();
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + tax;
+
+  const total = subtotal;
 
   const [form, setForm] = useState({
     name: "",
@@ -301,13 +299,6 @@ const Checkout = () => {
                     Free
                   </span>
                 </div>
-
-                {/* <div className="flex items-center justify-between border-b border-black/10 pb-4">
-                  <span className="text-xs font-black uppercase tracking-widest">
-                    Tax
-                  </span>
-                  <span className="text-xl font-black">{formatPrice(tax)}</span>
-                </div> */}
               </div>
 
               <div className="mb-10 flex items-center justify-between gap-4">
