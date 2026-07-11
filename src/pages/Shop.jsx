@@ -337,8 +337,8 @@ export default function Shop() {
             />
 
             <div className="flex justify-between text-xs mt-2">
-              <span>${filters.priceRange.min}</span>
-              <span>Up to ${filters.priceRange.max}</span>
+              <span>₦{filters.priceRange.min}</span>
+              <span>Up to ₦{filters.priceRange.max}</span>
             </div>
           </div>
 

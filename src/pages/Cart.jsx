@@ -5,9 +5,8 @@ import { getPriceValue } from "../utils/prices";
 import ImageWithFallback from "../components/ImageWithFallback";
 
 function formatPrice(value) {
-  return `$${value.toFixed(2)}`;
+  return `₦${value.toFixed(2)}`;
 }
-
 const Cart = () => {
   const { items, subtotal, updateQuantity, removeFromCart } = useCart();
 

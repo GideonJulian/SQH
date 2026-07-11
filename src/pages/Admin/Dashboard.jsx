@@ -15,74 +15,100 @@ import {
 import { api, formatPriceCents } from "../../services/api";
 import { logoutAdmin } from "../../utils/adminAuth";
 
+function getResponsePayload(response) {
+  return response?.data ?? response;
+}
+
+function getCollection(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.orders)) return payload.orders;
+  if (Array.isArray(payload?.data)) return payload.data;
+  return [];
+}
+
+function formatOrderDate(value) {
+  if (!value) return "N/A";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value).toUpperCase();
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  })
+    .format(date)
+    .toUpperCase();
+}
+
+function formatOrderAmount(order) {
+  const centsValue =
+    order.totalCents ??
+    order.totalAmountCents ??
+    order.amountCents ??
+    order.grandTotalCents;
+
+  if (typeof centsValue === "number") {
+    return formatPriceCents(centsValue);
+  }
+
+  const value = order.total ?? order.amount ?? order.grandTotal;
+  if (typeof value === "string") return value;
+
+  if (typeof value === "number") {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: order.currency || "USD",
+    }).format(value);
+  }
+
+  return "N/A";
+}
+
+function normalizeOrder(order) {
+  const status = order.status || "pending";
+  const normalizedStatus = status.replace(/_/g, " ").toUpperCase();
+  const filledStatuses = ["COMPLETED", "DELIVERED", "DISPATCHED", "FULFILLED", "PAID", "SHIPPED"];
+
+  return {
+    id: order.orderNumber || order.number || order.id || "N/A",
+    customer: order.customerName || order.customer?.name || "Unknown Customer",
+    email: order.customerEmail || order.customer?.email || "No email",
+    date: formatOrderDate(order.createdAt || order.date || order.updatedAt),
+    status: normalizedStatus,
+    amount: formatOrderAmount(order),
+    filled: filledStatuses.includes(normalizedStatus),
+  };
+}
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [summary, setSummary] = useState(null);
+  const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const recentOrders = [
-    {
-      id: "#SQH-0982",
-      customer: "Marcus Thorne",
-      email: "m.thorne@vanguard.com",
-      date: "OCT 24, 2023",
-      status: "DISPATCHED",
-      amount: "$499.00",
-      filled: true,
-    },
-    {
-      id: "#SQH-0981",
-      customer: "Elena Rodriguez",
-      email: "elena.r@kinetic.io",
-      date: "OCT 24, 2023",
-      status: "DISPATCHED",
-      amount: "$1,240.00",
-      filled: true,
-    },
-    {
-      id: "#SQH-0980",
-      customer: "Junji Sato",
-      email: "sato.j@apex.jp",
-      date: "OCT 23, 2023",
-      status: "PROCESSING",
-      amount: "$89.00",
-      filled: false,
-    },
-    {
-      id: "#SQH-0979",
-      customer: "Sarah Jenkins",
-      email: "s.jenkins@summit.org",
-      date: "OCT 23, 2023",
-      status: "DISPATCHED",
-      amount: "$2,100.00",
-      filled: true,
-    },
-    {
-      id: "#SQH-0978",
-      customer: "David Cole",
-      email: "d.cole@pioneer.com",
-      date: "OCT 22, 2023",
-      status: "PENDING",
-      amount: "$315.50",
-      filled: false,
-    },
-  ];
-
   useEffect(() => {
-    async function loadSummary() {
+    async function loadDashboardData() {
       try {
-        const response = await api.get("/admin/dashboard/summary");
-        setSummary(response.data);
+        setLoading(true);
+        const [summaryResponse, ordersResponse] = await Promise.all([
+          api.get("/admin/dashboard/summary"),
+          api.get("/admin/orders?limit=5"),
+        ]);
+
+        setSummary(getResponsePayload(summaryResponse));
+        setRecentOrders(getCollection(getResponsePayload(ordersResponse)).map(normalizeOrder));
       } catch (err) {
-        setError(err.message || "Failed to load dashboard summary.");
+        setError(err.message || "Failed to load dashboard data.");
       } finally {
         setLoading(false);
       }
     }
 
-    loadSummary();
+    loadDashboardData();
   }, []);
 
   const handleLogout = async () => {
@@ -276,6 +302,7 @@ export default function Dashboard() {
                 </h3>
                 <button
                   type="button"
+                  onClick={() => navigate("/admin/orders")}
                   className="border-b-2 border-black pb-1 text-xs font-black uppercase tracking-widest"
                 >
                   View All
@@ -283,33 +310,41 @@ export default function Dashboard() {
               </div>
 
               <div className="flex flex-col gap-3">
-                {mobileOrders.map((order) => (
-                  <div
-                    key={order.id}
-                    className="flex items-center justify-between gap-4 border-2 border-black bg-white p-4 active:scale-[0.98] active:bg-black active:text-white"
-                  >
-                    <div className="min-w-0">
-                      <span className="block truncate text-xs font-bold uppercase text-black/40">
-                        {order.id}
-                      </span>
-                      <span className="mt-1 block truncate text-lg font-black uppercase">
-                        {order.customer}
-                      </span>
+                {mobileOrders.length > 0 ? (
+                  mobileOrders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="flex items-center justify-between gap-4 border-2 border-black bg-white p-4 active:scale-[0.98] active:bg-black active:text-white"
+                    >
+                      <div className="min-w-0">
+                        <span className="block truncate text-xs font-bold uppercase text-black/40">
+                          {order.id}
+                        </span>
+                        <span className="mt-1 block truncate text-lg font-black uppercase">
+                          {order.customer}
+                        </span>
+                      </div>
+                      <div className="shrink-0 text-right">
+                        <span
+                          className={`inline-flex px-2 py-0.5 text-[10px] font-black uppercase ${
+                            order.filled
+                              ? "bg-black text-white"
+                              : "border-2 border-black bg-white text-black"
+                          }`}
+                        >
+                          {order.status}
+                        </span>
+                        <span className="mt-1 block text-sm font-black">{order.amount}</span>
+                      </div>
                     </div>
-                    <div className="shrink-0 text-right">
-                      <span
-                        className={`inline-flex px-2 py-0.5 text-[10px] font-black uppercase ${
-                          order.filled
-                            ? "bg-black text-white"
-                            : "border-2 border-black bg-white text-black"
-                        }`}
-                      >
-                        {order.status}
-                      </span>
-                      <span className="mt-1 block text-sm font-black">{order.amount}</span>
-                    </div>
+                  ))
+                ) : (
+                  <div className="border-2 border-black bg-white p-6">
+                    <p className="text-xs font-black uppercase tracking-widest text-black/50">
+                      No recent orders
+                    </p>
                   </div>
-                ))}
+                )}
               </div>
             </section>
 
@@ -433,9 +468,10 @@ export default function Dashboard() {
                 </h2>
                 <button
                   className="border-b-2 border-black px-2 py-1 text-xs font-black uppercase tracking-widest transition-colors hover:bg-black hover:text-white"
+                  onClick={() => navigate("/admin/orders")}
                   type="button"
                 >
-                  Export_Data.csv
+                  View All
                 </button>
               </div>
 
@@ -461,36 +497,47 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black">
-                    {recentOrders.map((order) => (
-                      <tr key={order.id} className="cursor-default hover:bg-black/[0.03]">
-                        <td className="px-8 py-6 font-mono text-sm font-black">
-                          {order.id}
-                        </td>
-                        <td className="px-8 py-6">
-                          <div className="flex flex-col">
-                            <span className="font-black uppercase text-black">
-                              {order.customer}
+                    {recentOrders.length > 0 ? (
+                      recentOrders.map((order) => (
+                        <tr key={order.id} className="cursor-default hover:bg-black/[0.03]">
+                          <td className="px-8 py-6 font-mono text-sm font-black">
+                            {order.id}
+                          </td>
+                          <td className="px-8 py-6">
+                            <div className="flex flex-col">
+                              <span className="font-black uppercase text-black">
+                                {order.customer}
+                              </span>
+                              <span className="text-xs text-black/50">{order.email}</span>
+                            </div>
+                          </td>
+                          <td className="px-8 py-6 text-sm font-bold uppercase">{order.date}</td>
+                          <td className="px-8 py-6">
+                            <span
+                              className={`px-3 py-1 text-[10px] font-black uppercase tracking-tight ${
+                                order.filled
+                                  ? "bg-black text-white"
+                                  : "border border-black bg-white text-black"
+                              }`}
+                            >
+                              {order.status}
                             </span>
-                            <span className="text-xs text-black/50">{order.email}</span>
-                          </div>
-                        </td>
-                        <td className="px-8 py-6 text-sm font-bold uppercase">{order.date}</td>
-                        <td className="px-8 py-6">
-                          <span
-                            className={`px-3 py-1 text-[10px] font-black uppercase tracking-tight ${
-                              order.filled
-                                ? "bg-black text-white"
-                                : "border border-black bg-white text-black"
-                            }`}
-                          >
-                            {order.status}
-                          </span>
-                        </td>
-                        <td className="px-8 py-6 text-right font-mono text-sm font-black">
-                          {order.amount}
+                          </td>
+                          <td className="px-8 py-6 text-right font-mono text-sm font-black">
+                            {order.amount}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          className="px-8 py-10 text-center text-xs font-black uppercase tracking-widest text-black/50"
+                          colSpan={5}
+                        >
+                          No recent orders
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>

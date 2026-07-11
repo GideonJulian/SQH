@@ -7,7 +7,7 @@ import { api } from "../services/api";
 import ImageWithFallback from "../components/ImageWithFallback";
 
 function formatPrice(value) {
-  return `$${value.toFixed(2)}`;
+   return `₦${value.toFixed(2)}`;
 }
 
 const TAX_RATE = 0.08;

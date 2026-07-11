@@ -87,9 +87,9 @@ export function centsToDollars(cents) {
 
 export function formatPriceCents(cents) {
   const dollars = centsToDollars(cents);
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-NG", {
     style: "currency",
-    currency: "USD",
+    currency: "NGN",
   }).format(dollars);
 }
 
