@@ -7,12 +7,12 @@ export default function AdminLayout() {
     {
       label: "Dashboard",
       icon: Grid2X2,
-      path: "/admin/dashboard",
+      path: "/admin",
     },
     {
       label: "Products",
       icon: Package,
-      path: "/admin/",
+      path: "/admin/products",
     },
     {
       label: "Orders",

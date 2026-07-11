@@ -14,6 +14,7 @@ import Dashboard from "./pages/Admin/Dashboard";
 import ProductListing from "./pages/Admin/ProductListing";
 import ProductEdit from "./pages/Admin/ProductEdit";
 import ProductUpload from "./pages/Admin/ProductUpload";
+import Orders from "./pages/Admin/Orders";
 const App = () => {
   const route = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const App = () => {
         {
           path: "upload",
           element: <ProductUpload />,
+        },
+        {
+          path: "orders",
+          element: <Orders />,
         },
         {
           path: "edit/:id",

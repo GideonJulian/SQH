@@ -41,7 +41,6 @@ function formatOrderDate(value) {
     .format(date)
     .toUpperCase();
 }
-
 function formatOrderAmount(order) {
   const centsValue =
     order.totalCents ??
@@ -57,15 +56,14 @@ function formatOrderAmount(order) {
   if (typeof value === "string") return value;
 
   if (typeof value === "number") {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-NG", {
       style: "currency",
-      currency: order.currency || "USD",
+      currency: order.currency || "NGN",
     }).format(value);
   }
 
   return "N/A";
 }
-
 function normalizeOrder(order) {
   const status = order.status || "pending";
   const normalizedStatus = status.replace(/_/g, " ").toUpperCase();
