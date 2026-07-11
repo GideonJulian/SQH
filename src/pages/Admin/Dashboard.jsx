@@ -58,7 +58,7 @@ function formatOrderAmount(order) {
   if (typeof value === "number") {
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
-      currency: order.currency || "NGN",
+      currency: "NGN",
     }).format(value);
   }
 
