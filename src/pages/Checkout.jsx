@@ -6,6 +6,11 @@ import { getPriceValue } from "../utils/prices";
 import { api } from "../services/api";
 import ImageWithFallback from "../components/ImageWithFallback";
 
+const CURRENCIES = [
+  { code: "NGN", label: "NGN — Nigerian Naira" },
+  { code: "USD", label: "USD — US Dollar" },
+];
+
 function formatPrice(value) {
   return `₦${value.toFixed(2)}`;
 }
@@ -24,6 +29,7 @@ const Checkout = () => {
     zip: "",
     country: "US",
   });
+  const [currency, setCurrency] = useState("USD");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -55,6 +61,7 @@ const Checkout = () => {
           size: item.size,
           quantity: item.quantity,
         })),
+        currency,
       };
 
       const orderResponse = await api.post("/orders", orderPayload);
@@ -280,6 +287,33 @@ const Checkout = () => {
               <h2 className="mb-8 text-3xl font-black uppercase md:text-4xl">
                 Order Summary
               </h2>
+
+              <div className="mb-8">
+                <label
+                  className="mb-2 block text-xs font-black uppercase tracking-widest text-black/60"
+                  htmlFor="checkout-currency"
+                >
+                  Pay In
+                </label>
+                <div className="relative">
+                  <select
+                    className="w-full cursor-pointer appearance-none border-2 border-black bg-white px-4 py-3 text-sm font-black uppercase tracking-widest focus:outline-none"
+                    id="checkout-currency"
+                    name="currency"
+                    onChange={(e) => setCurrency(e.target.value)}
+                    value={currency}
+                  >
+                    {CURRENCIES.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <p className="mt-2 text-[10px] font-bold uppercase tracking-tight text-black/40">
+                  Prices shown in NGN. You'll be charged the {currency} equivalent at checkout.
+                </p>
+              </div>
 
               <div className="mb-8 space-y-4">
                 <div className="flex items-center justify-between border-b border-black/10 pb-4">

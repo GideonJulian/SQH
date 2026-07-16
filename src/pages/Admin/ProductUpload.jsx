@@ -167,7 +167,7 @@ export default function ProductUpload() {
                 name="price"
                 value={form.price}
                 onChange={handleChange}
-                placeholder="Price (USD)"
+                placeholder="Price (NGN)"
                 className="min-w-0 border-b border-black bg-transparent py-3 font-bold outline-none placeholder:text-black/30"
                 required
                 type="number"
