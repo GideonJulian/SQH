@@ -34,6 +34,7 @@ const Checkout = () => {
     zip: "",
     country: "US",
   });
+  const [currency, setCurrency] = useState("NGN");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
