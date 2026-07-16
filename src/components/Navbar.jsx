@@ -4,6 +4,7 @@ import { ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import CurrencySelector from "./CurrencySelector";
 
 const navLinks = [
   {
@@ -60,25 +61,29 @@ export default function Navbar() {
           ))}
         </div>
 
-        <motion.div
-          whileTap={{
-            scale: 0.9,
-          }}
-          className="md:hidden"
-        >
-          <Link
-            to="/cart"
-            className="relative hidden  md:block"
-            aria-label="Open cart"
+        <div className="flex items-center gap-4">
+          <CurrencySelector />
+
+          <motion.div
+            whileTap={{
+              scale: 0.9,
+            }}
+            className="md:hidden"
           >
-            <ShoppingCart size={22} strokeWidth={2.5} />
-            {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 grid size-4 place-items-center bg-black text-white text-[10px] font-bold">
-                {itemCount}
-              </span>
-            )}
-          </Link>
-        </motion.div>
+            <Link
+              to="/cart"
+              className="relative hidden  md:block"
+              aria-label="Open cart"
+            >
+              <ShoppingCart size={22} strokeWidth={2.5} />
+              {itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 grid size-4 place-items-center bg-black text-white text-[10px] font-bold">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
+          </motion.div>
+        </div>
       </nav>
     </header>
   );

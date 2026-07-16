@@ -6,11 +6,13 @@ import { Link, useParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import ImageWithFallback from "../components/ImageWithFallback";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 import { api, formatPriceCents } from "../services/api";
 
 export default function ProductDetail() {
   const { productId } = useParams();
   const { addToCart } = useCart();
+  const { currency, ngnPerUsd } = useCurrency();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -97,7 +99,7 @@ export default function ProductDetail() {
 
           <div className="flex items-baseline gap-4 mb-8">
             <span className="font-black text-black">
-              {formatPriceCents(product.price)}
+              {formatPriceCents(product.price, currency, ngnPerUsd)}
             </span>
             <span className="text-black/40 font-bold line-through">
               $180.00

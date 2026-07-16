@@ -85,12 +85,21 @@ export function centsToDollars(cents) {
   return cents / 100;
 }
 
-export function formatPriceCents(cents) {
-  const dollars = centsToDollars(cents);
-  return new Intl.NumberFormat("en-NG", {
+const CURRENCY_LOCALES = {
+  NGN: "en-NG",
+  USD: "en-US",
+};
+
+// `cents` is always the NGN base price. Pass `ngnPerUsd` to display in USD.
+export function formatPriceCents(cents, currency = "NGN", ngnPerUsd = null) {
+  const ngn = centsToDollars(cents);
+  const amount = currency === "USD" && ngnPerUsd ? ngn / ngnPerUsd : ngn;
+  const displayCurrency = currency === "USD" && ngnPerUsd ? "USD" : "NGN";
+
+  return new Intl.NumberFormat(CURRENCY_LOCALES[displayCurrency], {
     style: "currency",
-    currency: "NGN",
-  }).format(dollars);
+    currency: displayCurrency,
+  }).format(amount);
 }
 
 export function dollarsToCents(dollars) {

@@ -8,6 +8,7 @@ import Checkout from "./pages/Checkout";
 import AdminLogin from "./pages/AdminLogin";
 import ProductDetail from "./pages/ProductDetail";
 import { CartProvider } from "./context/CartContext";
+import { CurrencyProvider } from "./context/CurrencyContext";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import AdminLayout from "./Layouts/Admin/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard";
@@ -85,9 +86,11 @@ const App = () => {
   ]);
 
   return (
-    <CartProvider>
-      <RouterProvider router={route} />
-    </CartProvider>
+    <CurrencyProvider>
+      <CartProvider>
+        <RouterProvider router={route} />
+      </CartProvider>
+    </CurrencyProvider>
   );
 };
 
