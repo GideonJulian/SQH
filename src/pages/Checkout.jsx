@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ArrowLeft, LockKeyhole } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 import { getPriceValue } from "../utils/prices";
 import { api } from "../services/api";
 import ImageWithFallback from "../components/ImageWithFallback";
@@ -11,15 +12,19 @@ const CURRENCIES = [
   { code: "USD", label: "USD — US Dollar" },
 ];
 
-function formatPrice(value) {
-  return `₦${value.toFixed(2)}`;
-}
-
 const Checkout = () => {
   const { items, subtotal, clearCart } = useCart();
+  const { currency, setCurrency, ngnPerUsd } = useCurrency();
   const navigate = useNavigate();
 
   const total = subtotal;
+
+  function formatPrice(ngnValue) {
+    if (currency === "USD" && ngnPerUsd) {
+      return `$${(ngnValue / ngnPerUsd).toFixed(2)}`;
+    }
+    return `₦${ngnValue.toFixed(2)}`;
+  }
 
   const [form, setForm] = useState({
     name: "",
@@ -29,7 +34,6 @@ const Checkout = () => {
     zip: "",
     country: "US",
   });
-  const [currency, setCurrency] = useState("USD");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
@@ -311,7 +315,7 @@ const Checkout = () => {
                   </select>
                 </div>
                 <p className="mt-2 text-[10px] font-bold uppercase tracking-tight text-black/40">
-                  Prices shown in NGN. You'll be charged the {currency} equivalent at checkout.
+                  Prices shown in {currency}. You'll be charged this amount at checkout.
                 </p>
               </div>
 
