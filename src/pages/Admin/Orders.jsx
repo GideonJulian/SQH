@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bell, ChevronLeft, ChevronRight, Search, Settings } from "lucide-react";
+import {
+  Bell,
+  ChevronLeft,
+  ChevronRight,
+  ChevronRight as CardChevron,
+  Search,
+  Settings,
+} from "lucide-react";
 import { api } from "../../services/api";
 
 const PAGE_LIMIT = 7;
@@ -12,6 +19,7 @@ const STATUS_FILTERS = [
   { label: "Failed", value: "failed" },
   { label: "Refunded", value: "refunded" },
 ];
+
 function getResponsePayload(response) {
   return response?.data ?? response;
 }
@@ -45,8 +53,8 @@ function formatAmount(value) {
 }
 
 function normalizeOrder(order) {
-  const status = (order.status || "pending").replace(/_/g, " ").toUpperCase();
-  const filledStatuses = ["COMPLETED", "DELIVERED", "DISPATCHED", "FULFILLED", "PAID", "SHIPPED"];
+  const status = (order.status || "pending_payment").replace(/_/g, " ").toUpperCase();
+  const filledStatuses = ["PAID"];
 
   return {
     id: order.orderNumber || order.number || order.id || "N/A",
@@ -63,6 +71,7 @@ export default function Orders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [activeStatus, setActiveStatus] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalEntries, setTotalEntries] = useState(0);
@@ -102,6 +111,15 @@ export default function Orders() {
     setPage(1);
   };
 
+const filteredOrders = useMemo(() => {
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  if (!normalizedQuery) return orders;
+
+  return orders.filter((order) =>
+    order.customer.toLowerCase().includes(normalizedQuery)
+  );
+}, [orders, searchQuery]);
+
   const pageNumbers = useMemo(() => {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }, [totalPages]);
@@ -134,8 +152,137 @@ export default function Orders() {
         </div>
       </header>
 
-      <main className="px-5 pb-32 pt-24 lg:ml-64 lg:px-12 lg:pb-16">
-        {/* Section Header */}
+      {/* ===================== MOBILE ===================== */}
+      <main className="px-5 pb-32 pt-24 lg:hidden">
+        {/* Search */}
+        <div className="relative mb-6">
+          <div className="flex items-center border-b-2 border-black py-2">
+            <Search size={18} className="mr-3 text-black/50" />
+            <input
+              className="w-full border-none bg-transparent p-0 text-xs font-black uppercase tracking-widest placeholder:text-black/30 focus:outline-none focus:ring-0"
+              placeholder="Search order ID or customer..."
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Scrollable Filters */}
+        <div className="no-scrollbar mb-8 -mx-5 flex gap-2 overflow-x-auto px-5">
+          {STATUS_FILTERS.map((filter) => {
+            const isActive = activeStatus === filter.value;
+            return (
+              <button
+                key={filter.value}
+                type="button"
+                onClick={() => handleStatusFilter(filter.value)}
+                className={`whitespace-nowrap border px-6 py-2 text-[12px] font-black tracking-widest transition-colors ${
+                  isActive
+                    ? "border-black bg-black text-white"
+                    : "border-black/10 bg-white text-black hover:border-black"
+                }`}
+              >
+                {filter.label.toUpperCase()}
+              </button>
+            );
+          })}
+        </div>
+
+        {loading && (
+          <p className="text-xs font-black uppercase tracking-widest">Loading orders...</p>
+        )}
+
+        {error && (
+          <p className="text-xs font-black uppercase tracking-widest text-red-600">{error}</p>
+        )}
+
+        {!loading && !error && (
+          <>
+            {/* Orders Stack */}
+            <div className="flex flex-col gap-1">
+              <div className="mb-4 flex items-center justify-between border-l-4 border-black pl-3">
+                <h2 className="text-[18px] font-black uppercase tracking-tighter">
+                  Active Orders
+                </h2>
+                {/* <span className="text-[12px] font-black text-black/40">
+                  TOTAL: {totalEntries}
+                </span> */}
+              </div>
+
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order) => (
+                  <div
+                    key={order.rawId}
+                    onClick={() => navigate(`/admin/orders/${order.rawId}`)}
+                    className="mb-3 cursor-pointer border-2 border-black bg-white p-4 transition-transform active:scale-[0.98]"
+                  >
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <span className="text-[12px] font-black text-black/40">
+                        #{order.id}
+                      </span>
+                      <span className="truncate text-[14px] font-black uppercase">
+                        {order.customer}
+                      </span>
+                      <span className="text-[16px] font-extrabold">
+                        {order.amount}
+                      </span>
+                    </div>
+                    <div className="flex items-end justify-between">
+                      <div
+                        className={`inline-block px-3 py-1 text-[10px] font-black tracking-[0.2em] ${
+                          order.filled
+                            ? "bg-black text-white"
+                            : "border border-black/20 bg-white text-black"
+                        }`}
+                      >
+                        {order.status}
+                      </div>
+                      <CardChevron size={20} className="text-black/20" />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="border-2 border-black bg-white p-6 text-center">
+                  <p className="text-xs font-black uppercase tracking-widest text-black/50">
+                    No orders found
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-between border-t-2 border-black pt-6">
+                <button
+                  type="button"
+                  disabled={page === 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="flex items-center gap-1 text-xs font-black uppercase tracking-widest disabled:opacity-30"
+                >
+                  <ChevronLeft size={16} />
+                  Prev
+                </button>
+                <span className="text-xs font-black uppercase tracking-widest text-black/50">
+                  Page {page} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={page === totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="flex items-center gap-1 text-xs font-black uppercase tracking-widest disabled:opacity-30"
+                >
+                  Next
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </main>
+
+      {/* ===================== DESKTOP ===================== */}
+      <main className="hidden px-5 pb-16 pt-24 lg:ml-64 lg:block lg:px-12">
         <div className="mb-10 flex flex-col justify-between gap-6 border-b-4 border-black pb-4 lg:flex-row lg:items-end">
           <div className="relative">
             <span className="pointer-events-none absolute -left-4 -top-12 hidden select-none text-[120px] font-black uppercase leading-none text-black/[0.03] lg:block">
@@ -146,24 +293,40 @@ export default function Orders() {
             </h1>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {STATUS_FILTERS.map((filter) => {
-              const isActive = activeStatus === filter.value;
-              return (
-                <button
-                  key={filter.value}
-                  type="button"
-                  onClick={() => handleStatusFilter(filter.value)}
-                  className={`border-2 border-black px-6 py-2 text-xs font-black uppercase tracking-widest transition-all ${
-                    isActive
-                      ? "bg-black text-white"
-                      : "bg-white text-black hover:bg-black hover:text-white"
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              );
-            })}
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="relative w-72">
+              <Search
+                size={18}
+                className="absolute bottom-2.5 left-0 text-black"
+              />
+              <input
+                className="w-full border-b-2 border-black bg-transparent py-2 pl-8 pr-3 text-xs font-black uppercase tracking-widest outline-none placeholder:text-black/30"
+                placeholder="Search order ID or customer..."
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {STATUS_FILTERS.map((filter) => {
+                const isActive = activeStatus === filter.value;
+                return (
+                  <button
+                    key={filter.value}
+                    type="button"
+                    onClick={() => handleStatusFilter(filter.value)}
+                    className={`border-2 border-black px-6 py-2 text-xs font-black uppercase tracking-widest transition-all ${
+                      isActive
+                        ? "bg-black text-white"
+                        : "bg-white text-black hover:bg-black hover:text-white"
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -177,7 +340,6 @@ export default function Orders() {
 
         {!loading && !error && (
           <>
-            {/* Table */}
             <div className="border-2 border-black bg-white">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[780px] border-collapse text-left">
@@ -201,8 +363,8 @@ export default function Orders() {
                     </tr>
                   </thead>
                   <tbody>
-                    {orders.length > 0 ? (
-                      orders.map((order) => (
+                    {filteredOrders.length > 0 ? (
+                      filteredOrders.map((order) => (
                         <tr
                           key={order.rawId}
                           onClick={() => navigate(`/admin/orders/${order.rawId}`)}
@@ -248,14 +410,13 @@ export default function Orders() {
               </div>
             </div>
 
-            {/* Pagination */}
             <div className="mt-8 flex flex-col items-center justify-between gap-6 md:flex-row">
-              {/* <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4">
                 <span className="text-xs font-black uppercase tracking-widest text-black/50">
                   Showing {orders.length} of {totalEntries} entries
                 </span>
                 <div className="h-px w-24 bg-black" />
-              </div> */}
+              </div>
 
               <div className="flex border-2 border-black">
                 <button
