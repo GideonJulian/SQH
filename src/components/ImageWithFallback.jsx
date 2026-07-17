@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PLACEHOLDER_IMAGE = 'https://placehold.co/600x800?text=SQH';
 
 export default function ImageWithFallback({ src, alt, className, ...props }) {
   const [imgSrc, setImgSrc] = useState(src || PLACEHOLDER_IMAGE);
+
+  useEffect(() => {
+    setImgSrc(src || PLACEHOLDER_IMAGE);
+  }, [src]);
 
   return (
     <img
