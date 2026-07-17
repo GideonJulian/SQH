@@ -287,7 +287,7 @@ export default function ProductEdit() {
           <div className="relative w-full aspect-[4/5] border border-black overflow-hidden">
             <ImageWithFallback
               src={imagePreview}
-              className="w-full h-full object-cover grayscale"
+              className="w-full h-full object-cover "
               alt="product"
             />
 

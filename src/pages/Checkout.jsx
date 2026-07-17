@@ -14,7 +14,7 @@ const CURRENCIES = [
 
 const Checkout = () => {
   const { items, subtotal, clearCart } = useCart();
-  const { currency, setCurrency, ngnPerUsd } = useCurrency();
+ 
   const navigate = useNavigate();
 
   const total = subtotal;

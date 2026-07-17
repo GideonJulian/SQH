@@ -199,7 +199,7 @@
                           <div className="h-20 w-16 overflow-hidden border border-black/5 bg-black/5">
                             <ImageWithFallback
                               alt={product.title}
-                              className="h-full w-full object-cover grayscale"
+                              className="h-full w-full object-cover "
                               src={product.image}
                             />
                           </div>
@@ -244,7 +244,7 @@
                       <div className="h-20 w-20 shrink-0 overflow-hidden bg-black/5">
                         <ImageWithFallback
                           alt={product.title}
-                          className="h-full w-full object-cover grayscale"
+                          className="h-full w-full object-cover "
                           src={product.image}
                         />
                       </div>

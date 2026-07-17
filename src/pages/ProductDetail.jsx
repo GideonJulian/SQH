@@ -72,7 +72,7 @@ export default function ProductDetail() {
           <div className="bg-zinc-100 aspect-[4/5] overflow-hidden flex items-center justify-center">
             <ImageWithFallback
               alt={product.title}
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              className="w-full h-full object-cover  group-hover:grayscale-0 transition-all duration-500"
               src={product.image}
             />
           </div>
@@ -101,9 +101,9 @@ export default function ProductDetail() {
             <span className="font-black text-black">
               {formatPriceCents(product.price, currency, ngnPerUsd)}
             </span>
-            <span className="text-black/40 font-bold line-through">
+            {/* <span className="text-black/40 font-bold line-through">
               $180.00
-            </span>
+            </span> */}
           </div>
 
           <p className="text-black/65 max-w-md mb-10">
