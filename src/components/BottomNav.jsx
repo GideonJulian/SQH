@@ -34,7 +34,7 @@ export default function BottomNav() {
   const { itemCount } = useCart();
 
   return (
-    <nav className="md:hidden fixed bottom-5 left-4 right-4 z-50">
+    <nav className="md:hidden fixed bottom-2 left-4 right-4 z-50">
       <div
         className="
           flex items-center justify-around

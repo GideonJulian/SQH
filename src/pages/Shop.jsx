@@ -7,26 +7,56 @@ import ProductCard from "../components/ProductCard";
 import { api } from "../services/api";
 import { getPriceValue } from "../utils/prices";
 
-const ITEMS_PER_PAGE = 6;
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const MOBILE_ITEMS_PER_PAGE = 4;
+const DESKTOP_ITEMS_PER_PAGE = 6;
+const MOBILE_BREAKPOINT = 768; // matches Tailwind's md: breakpoint
 
-const DEFAULT_FILTERS = {
-  categories: {
-    outerwear: false,
-    training: false,
-    accessories: false,
-    footwear: false,
-  },
-  size: "",
-  priceRange: {
-    min: 0,
-    max: 500,
-  },
-};
+function buildDefaultFilters(maxPrice) {
+  return {
+    categories: {
+      outerwear: false,
+      training: false,
+      accessories: false,
+      footwear: false,
+    },
+    size: "",
+    priceRange: {
+      min: 0,
+      max: maxPrice,
+    },
+  };
+}
+
+function useItemsPerPage() {
+  const [itemsPerPage, setItemsPerPage] = useState(
+    typeof window !== "undefined" && window.innerWidth < MOBILE_BREAKPOINT
+      ? MOBILE_ITEMS_PER_PAGE
+      : DESKTOP_ITEMS_PER_PAGE
+  );
+
+  useEffect(() => {
+    function handleResize() {
+      setItemsPerPage(
+        window.innerWidth < MOBILE_BREAKPOINT
+          ? MOBILE_ITEMS_PER_PAGE
+          : DESKTOP_ITEMS_PER_PAGE
+      );
+    }
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return itemsPerPage;
+}
 
 export default function Shop() {
+  const itemsPerPage = useItemsPerPage();
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [priceBound, setPriceBound] = useState(500);
+  const [filters, setFilters] = useState(buildDefaultFilters(500));
   const [sort, setSort] = useState("NEWEST ARRIVALS");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -39,7 +69,17 @@ export default function Shop() {
       try {
         setLoading(true);
         const response = await api.get("/products?limit=100");
-        setProducts(response.data || []);
+        const data = response.data || [];
+        setProducts(data);
+
+        const highestPrice = data.reduce((max, product) => {
+          const value = getPriceValue(product.price);
+          return value > max ? value : max;
+        }, 0);
+
+        const roundedBound = Math.ceil((highestPrice || 500) / 100) * 100;
+        setPriceBound(roundedBound);
+        setFilters(buildDefaultFilters(roundedBound));
       } catch (err) {
         setError(err.message || "Failed to load products.");
       } finally {
@@ -77,10 +117,9 @@ export default function Shop() {
       const matchesSize =
         !filters.size || product.sizes?.includes(filters.size);
 
-      const priceInDollars = getPriceValue(product.price);
+      const price = getPriceValue(product.price);
       const matchesPrice =
-        priceInDollars >= filters.priceRange.min &&
-        priceInDollars <= filters.priceRange.max;
+        price >= filters.priceRange.min && price <= filters.priceRange.max;
 
       return matchesSearch && matchesCategory && matchesSize && matchesPrice;
     });
@@ -102,12 +141,22 @@ export default function Shop() {
     return result;
   }, [filters, searchQuery, sort, products]);
 
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage) || 1;
 
   const paginatedProducts = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
-  }, [page, filteredProducts]);
+    const start = (page - 1) * itemsPerPage;
+    return filteredProducts.slice(start, start + itemsPerPage);
+  }, [page, filteredProducts, itemsPerPage]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(1);
+    }
+  }, [totalPages, page]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [itemsPerPage]);
 
   const toggleCategory = (key) => {
     setFilters((prev) => ({
@@ -130,7 +179,7 @@ export default function Shop() {
 
   const updatePriceRange = (nextRange) => {
     const min = Math.max(0, Number(nextRange.min) || 0);
-    const max = Math.min(500, Number(nextRange.max) || 0);
+    const max = Math.min(priceBound, Number(nextRange.max) || 0);
 
     setFilters((prev) => ({
       ...prev,
@@ -153,7 +202,7 @@ export default function Shop() {
   };
 
   const clearFilters = () => {
-    setFilters(DEFAULT_FILTERS);
+    setFilters(buildDefaultFilters(priceBound));
     setSearchQuery("");
     setPage(1);
   };
@@ -175,7 +224,7 @@ export default function Shop() {
   }
 
   return (
-    <main className="relative min-h-screen max-w-[1440px] mx-auto px-6 md:px-8 pt-8 pt-20">
+    <main className="relative md:h-screen md:overflow-hidden max-w-[1440px] mx-auto px-6 md:px-8 pb-14">
       <header className="md:hidden border-b-2 border-black pb-4 mb-8">
         <div className="flex justify-between items-center">
           <h1 className="font-black uppercase text-2xl">SQH_QUEST</h1>
@@ -215,7 +264,8 @@ export default function Shop() {
         </div>
       </header>
 
-      <section className="hidden md:flex mb-12 flex-col md:flex-row md:items-end justify-between gap-6">
+      {/* Sticky collection header — desktop only */}
+      <section className="hidden md:flex md:sticky md:top-20 md:z-20 md:bg-white mb-12 flex-col md:flex-row md:items-end justify-between gap-6 pt-4 pb-6">
         <div>
           <h1 className="text-3xl font-black uppercase">The Collection</h1>
           <p className="text-sm opacity-60 max-w-xl mt-2">
@@ -272,8 +322,9 @@ export default function Shop() {
         </div>
       </section>
 
-      <div className="flex flex-col md:flex-row gap-12">
-        <aside className="hidden md:block w-full md:w-64 space-y-10">
+      <div className="flex flex-col md:flex-row gap-12 md:h-[calc(100vh-13rem)]">
+        {/* Sticky sidebar — desktop only */}
+        <aside className="hidden md:block w-full md:w-64 space-y-10 md:sticky md:top-[13rem] md:self-start md:overflow-y-auto md:max-h-[calc(100vh-14rem)] md:pr-2">
           <div>
             <h3 className="text-xs uppercase font-bold border-b pb-2 mb-4">
               Category
@@ -325,7 +376,7 @@ export default function Shop() {
             <input
               type="range"
               min="0"
-              max="500"
+              max={priceBound}
               value={filters.priceRange.max}
               onChange={(event) =>
                 updatePriceRange({
@@ -351,7 +402,8 @@ export default function Shop() {
           </button>
         </aside>
 
-        <div className="flex-1">
+        {/* Scrollable product area — desktop only scrolls here */}
+        <div className="flex-1 md:overflow-y-auto md:pr-1">
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
             {paginatedProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -368,7 +420,7 @@ export default function Shop() {
             </div>
           )}
 
-          <div className="mt-14 flex items-center justify-center gap-4">
+          <div className="mt-12 flex items-center justify-center gap-4 pb-8">
             <button
               type="button"
               disabled={page === 1}
@@ -379,12 +431,12 @@ export default function Shop() {
             </button>
 
             <span className="text-xs font-bold">
-              {page} / {totalPages || 1}
+              {page} / {totalPages}
             </span>
 
             <button
               type="button"
-              disabled={page === totalPages || totalPages === 0}
+              disabled={page === totalPages}
               onClick={() => setPage((prevPage) => prevPage + 1)}
               className="w-10 h-10 border-2 border-black disabled:opacity-30"
             >
