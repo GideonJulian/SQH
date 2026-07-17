@@ -16,11 +16,11 @@ const navItems = [
     icon: ShoppingBag,
     path: "/shop",
   },
-  {
-    label: "SEARCH",
-    icon: Search,
-    path: "/search",
-  },
+  // {
+  //   label: "SEARCH",
+  //   icon: Search,
+  //   path: "/search",
+  // },
   {
     label: "CART",
     icon: ShoppingCart,
