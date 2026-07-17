@@ -64,7 +64,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* <CurrencySelector /> */}
+          <CurrencySelector />
 
           <motion.div
             whileTap={{
