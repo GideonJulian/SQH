@@ -38,7 +38,7 @@ export default function Navbar() {
           </motion.button>
 
           <Link to="/" className="text-2xl font-black tracking-tight uppercase">
-            SQH_QUEST
+           HEROES
           </Link>
         </div>
 

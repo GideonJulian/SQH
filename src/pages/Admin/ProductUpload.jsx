@@ -4,7 +4,7 @@ import { Bell, LogOut, Settings, X } from "lucide-react";
 import { api, dollarsToCents } from "../../services/api";
 import ImageWithFallback from "../../components/ImageWithFallback";
 
-const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZE_OPTIONS = ["xxxl", "S", "M", "L", "XL", "XXL"];
 
 const CATEGORY_MAP = {
   "BASE LAYER": "training",
